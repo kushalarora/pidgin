@@ -12,7 +12,7 @@ class SolrSVOUpdater:
         file.close()
         i = 0;
         file = open(svo_file, 'r')
-        for line in file.readlines():
+        for line in file:
             sentence = line.strip().split("\t");
             if (len(sentence) > 4):
                 logging.warn("Sentence is not a quad tuple %s", sentence)
@@ -32,7 +32,6 @@ class SolrSVOUpdater:
 
 
 if __name__ == "__main__":
-    import pdb;pdb.set_trace();
     parser = argparse.ArgumentParser();
     FORMAT = '%(levelname)s %(asctime)s %(name)s: %(message)s'
     parser.add_argument("-s", "--server",
