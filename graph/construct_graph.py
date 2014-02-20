@@ -1,4 +1,4 @@
-from SPARQLWrapper import SPARQLWrapper, JSON
+from SPARQLWrapper import SPARQLWrapper, JSON, N3, RDF, XML
 import pysolr
 import argparse
 import logging
@@ -24,26 +24,39 @@ class ConstructGraph:
             offset = 0
 
         query = """
-                    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                    PREFIX rdf: <http://yago-knowledge.org/resource>
-                    SELECT ?s ?v ?o
-                    WHERE {
-                        ?s ?v ?o
-                        FILTER NOT EXISTS { ?s rdf:type ?o }
-                    }
-                    LIMIT %s
-                    OFFSET %s
-                """
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+        SELECT ?s ?v ?o
+        WHERE {
+                ?s rdfs:label ?o .
+        }
+        LIMIT %s
+        OFFSET %s
+        """
+        #query = """
+                    #PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                    #PREFIX yago: <http://yago-knowledge.org/resource>
+                    #SELECT ?s ?v ?o
+                    #WHERE {
+                        #?s ?v ?o
+                        #FILTER NOT EXISTS { ?s rdf:type ?o }
+                    #}
+                    #LIMIT %s
+                    #OFFSET %s
+                #"""
         self.sparql_client.setQuery(query % (self.limit, offset))
-
-        results = self.sparql_client.query().convert()
-
-        for result in results["results"]["bindings"]:
-            logging.info("%s: %s" % (self.dataset, result))
+        results = self.sparql_client.query()
+        print results.response.read();
+        #for result in results["results"]["bindings"]:
+            #print("%s: %s" % (self.dataset, result))
 
         backup_point = open(self.backup_file, "w")
-        backup_point.write(str(offset + self.limit))
+        #backup_point.write(str(offset + self.limit))
         backup_point.close()
+
+
+    def getSameAs(subject):
+        pass
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -57,11 +70,10 @@ if __name__ == "__main__":
             default="http://localhost:3031/solr")
     parser.add_argument("-b", "--batch_size", type=int,
             help="how many records to process in one go",
-            default=100)
+            default=10000)
 
     logging.basicConfig(format=FORMAT, level=logging.INFO)
     args = parser.parse_args()
-    import pdb;pdb.set_trace()
     grapher = ConstructGraph(
                 args.dataset,
                 args.sparql,

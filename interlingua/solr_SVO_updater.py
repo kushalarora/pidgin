@@ -1,10 +1,9 @@
-import pysolr
 import argparse
 import logging
+import urllib2
 class SolrSVOUpdater:
 
     def __init__(self, server_url='http://localhost:8983/solr/', svo_file='./svo_file'):
-        solr = pysolr.Solr(server_url)
 
         file = open(svo_file, 'r')
         num_triples = sum(1 for line in file)
@@ -16,16 +15,18 @@ class SolrSVOUpdater:
             sentence = line.strip().split("\t");
             if (len(sentence) > 4):
                 logging.warn("Sentence is not a quad tuple %s", sentence)
-            data = {
-                        "s": sentence[0],
-                        "v": sentence[1],
-                        "id": str(i),
-                        "o": sentence[2],
-                        "w": float(sentence[3])/float(num_triples)
-                    }
+            #data = {
+                        #"s": sentence[0],
+                        #"v": sentence[1],
+                        #"id": str(i),
+                        #"o": sentence[2],
+                        #"w": float(sentence[3])/float(num_triples)
+                    #}
+            sentence[3] = float(sentence[3])/num_triples
+            sentence[4] = i;
             logging.info("Adding triplet %s",  data)
 
-            solr.add([data], commitWithin='10000')
+
             i += 1;
         file.close()
         logging.info("Added %d records to solr", i)
