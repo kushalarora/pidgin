@@ -6,8 +6,9 @@ The directory contains the following
         |-- solrconfig.xml
         |-- schema.xml
 
-    solr_SVO_updater.py
+    solr_splitter.py
     svo.txt
+    solr_upload_svo.sh
 
 solr conf directory contains two file required to get solr up and running.
     1. schema.xml: This defines the basic schema for indexing
@@ -28,8 +29,9 @@ Installation Instructions:
         java -Djetty.port=<port no> -jar start.jar
 
 Indexing SVO triples:
-    To index SVO triples simply run python script solr_SVO_updater.py
-        python solr_SVO_updater.py -s <solr url> -i <svo file>
+    To index SVO first we split the input file into multiple file containing <split size> quad tuples each
+    Then we use solr bulk csv loader to upload these triples.
 
-    The two arguments are optional. By defult solr url is http://localhost:8983/solr and input file ./svo.txt. i.e. it is
-    the sample file containing 1000 SVO quads to test.
+    To index SVO triples simply run python update
+        ./solr_upload_svo.sh <ip:port of solr> <svo triples location> <split size>
+
