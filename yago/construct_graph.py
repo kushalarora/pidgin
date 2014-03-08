@@ -1,5 +1,4 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
-from exceptions import *
 import argparse
 import logging
 import json
@@ -21,9 +20,7 @@ class YagoRelationGraph:
         relations = [relation.strip() for relation in relations_file]
 
         if len(relations) == 0:
-            logging.error("Relations not found")
-            raise YAGO_RELATIONS_NOT_FOUND_EXCEPTION
-
+            assert "Relations not found"
         try:
             done_till_relation_file = open(DONE_TILL_FILE, "r")
             done_till_relation_index = int(done_till_relation_file.read())
@@ -76,7 +73,7 @@ class YagoRelationGraph:
             logging.info("Adding %s-(%s) edge" % (relation, entity_pair))
 
             graph_file.write("%s\n" % "\t".join([relation, entity_pair, "1.0"]))
-            self._add_noun_phrases(result["s"]["value"], result["o"]["value"], entity_pair)
+            self._add_noun_phrases(result["s"], result["o"], entity_pair)
         graph_file.close()
 
     def _minify_entity(self, entity):
@@ -91,25 +88,62 @@ class YagoRelationGraph:
 
     def _add_noun_phrases(self, entity1, entity2, entity_pair):
         np_file = open(self.np_file, 'a+')
-        query = """
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        np_pairs = []
+        if entity1["type"] == 'uri' and \
+            entity2["type"] == 'uri':
+            query = """
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-            SELECT ?o1 ?o2
-            WHERE {
-                     <%s> rdfs:label ?o1 .
-                     <%s> rdfs:label ?o2 .
-            }
-        """ % (entity1, entity2)
+                SELECT ?o1 ?o2
+                WHERE {
+                         <%s> rdfs:label ?o1 .
+                         <%s> rdfs:label ?o2 .
+                }
+            """ % (entity1["value"], entity2["value"])
 
-        results = self._query_sparql(query)
+            results = self._query_sparql(query)
 
-        if not results:
-            return
+            if not results:
+                return
 
-        for result in results["results"]["bindings"]:
-            np_pair =   "'%s' '%s'" % (result["o1"]["value"].encode('utf-8'),
-                                        result["o2"]["value"].encode('utf-8'))
-            logging.info("      %s" % np_pair)
+            for result in results["results"]["bindings"]:
+                np_pair =   "'%s' '%s'" % (result["o1"]["value"].encode('utf-8'),
+                                            result["o2"]["value"].encode('utf-8'))
+                logging.info("      %s" % np_pair)
+                np_pairs.append(np_pair)
+
+        elif entity1["type"] == 'uri' or \
+            entity2["type"] == 'uri':
+
+            entity = entity1["value"] if entity1["type"] == 'uri' else entity2["value"]
+
+            query = """
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                SELECT ?o
+                WHERE {
+                         <%s> rdfs:label ?o .
+                }
+            """ % entity
+
+            results = self._query_sparql(query)
+
+            if not results:
+                return
+            for result in results["results"]["bindings"]:
+                np_tuple =  (entity1["value"].encode('utf-8'),
+                                result["o"]["value"].encode('utf-8')) \
+                                    if entity1["type"] != 'uri' else \
+                                        (result['o']['value'].encode('utf-8'),
+                                            entity2['value'].encode('utf-8'))
+
+                np_pair = "'%s' '%s'" % np_tuple
+                logging.info("      %s" % np_pair)
+                np_pairs.append(np_pair)
+        else:
+            assert "Both Entities are literals %s %s" % (entity1, entity2)
+
+        for np_pair in np_pairs:
             np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "yago"]))
         np_file.close()
 
