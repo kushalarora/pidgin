@@ -3,7 +3,6 @@ import argparse
 import logging
 import json
 import os
-import re
 
 DONE_TILL_FILE = "./done_till_relation"
 
@@ -20,7 +19,7 @@ class YagoRelationGraph:
         relations = [relation.strip() for relation in relations_file]
 
         if len(relations) == 0:
-            assert "Relations not found"
+            assert "Yago::Relations not found"
         try:
             done_till_relation_file = open(DONE_TILL_FILE, "r")
             done_till_relation_index = int(done_till_relation_file.read())
@@ -41,13 +40,13 @@ class YagoRelationGraph:
         try:
             response = json.loads(self.sparql_client.query().response.read())
         except:
-            logging.error("Query Failed%s",query)
+            logging.error("Yago::Query Failed%s",query)
         return response
 
     def _add_entity_relation_edge(self, relation):
         graph_file = open(self.graph_file, "a+")
 
-        logging.info("Processing Relation '%s'" % relation)
+        logging.info("Yago::Processing Relation '%s'" % relation)
 
         query = """
             PREFIX yago: <http://yago-knowledge.org/resource/>
@@ -70,7 +69,7 @@ class YagoRelationGraph:
             entity_pair = "%s %s" % (self._encode_utf8(entity1),
 
                                         self._encode_utf8(entity2))
-            logging.info("Adding %s-(%s) edge" % (relation, entity_pair))
+            logging.info("Yago::Adding %s-(%s) edge" % (relation, entity_pair))
 
             graph_file.write("%s\n" % "\t".join([relation, entity_pair, "1.0"]))
             self._add_noun_phrases(result["s"], result["o"], entity_pair)
@@ -109,7 +108,7 @@ class YagoRelationGraph:
             for result in results["results"]["bindings"]:
                 np_pair =   "'%s' '%s'" % (result["o1"]["value"].encode('utf-8'),
                                             result["o2"]["value"].encode('utf-8'))
-                logging.info("      %s" % np_pair)
+                logging.info("      Yago::%s" % np_pair)
                 np_pairs.append(np_pair)
 
         elif entity1["type"] == 'uri' or \
@@ -138,7 +137,7 @@ class YagoRelationGraph:
                                             entity2['value'].encode('utf-8'))
 
                 np_pair = "'%s' '%s'" % np_tuple
-                logging.info("      %s" % np_pair)
+                logging.info("      Yago::%s" % np_pair)
                 np_pairs.append(np_pair)
         else:
             assert "Both Entities are literals %s %s" % (entity1, entity2)
@@ -171,6 +170,6 @@ if __name__ == "__main__":
                 args.graph_file,
                 args.np_file)
 
-    logging.info("Adding Entity-Pair Relation Edge for Yago!")
+    logging.info("Yago::Adding Entity-Pair Relation Edge for Yago!")
     grapher.build_graph()
-    logging.info("Exit!!")
+    logging.info("Yago::Exit!!")
