@@ -61,9 +61,10 @@ class NellRelationGraph:
 
         for e_literal in entity_literals:
             for v_literal in value_literals:
-                np_pair = "'%s' '%s'" % (e_literal, v_literal)
-                logging.info("      NELL::%s" % np_pair)
-                np_file.write("%s\n" % "\t".join([np_pair.encode('utf-8'), entity_pair.encode('utf-8'), "nell"]))
+                logging.info("      NELL::%s %s" % (e_literal, v_literal))
+                np_file.write("%s\n" % "\t".join([e_literal.encode('utf-8'),
+                                                    v_literal.encode('utf-8'),
+                                                    entity_pair.encode('utf-8'), "nell"]))
         np_file.close()
 
 if __name__ == "__main__":

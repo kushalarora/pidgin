@@ -106,7 +106,7 @@ class YagoRelationGraph:
                 return
 
             for result in results["results"]["bindings"]:
-                np_pair =   "'%s' '%s'" % (result["o1"]["value"].encode('utf-8'),
+                np_pair =   "%s\t%s" % (result["o1"]["value"].encode('utf-8'),
                                             result["o2"]["value"].encode('utf-8'))
                 logging.info("      Yago::%s" % np_pair)
                 np_pairs.append(np_pair)
@@ -136,7 +136,7 @@ class YagoRelationGraph:
                                         (result['o']['value'].encode('utf-8'),
                                             entity2['value'].encode('utf-8'))
 
-                np_pair = "'%s' '%s'" % np_tuple
+                np_pair = '%s\t%s' % np_tuple
                 logging.info("      Yago::%s" % np_pair)
                 np_pairs.append(np_pair)
         else:
