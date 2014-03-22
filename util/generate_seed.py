@@ -1,6 +1,6 @@
 import argparse
-import re
-def generate_seed_file(relation_file_path, seed_file_path, kb_type):
+
+def generate_seed_file(relation_file_path, seed_file_path):
     """ Generate seed file for KB.
     Labels are same as shorthand labels.
     This just copies the label qualified name as label """
@@ -9,11 +9,6 @@ def generate_seed_file(relation_file_path, seed_file_path, kb_type):
 
     for line in r_file:
         relation = line.strip()
-        #TODO:(Hack) Currently ignoring _concept relations
-        # as they are not part of graph
-        if kb_type == 'nell' and re.search('^_concept:', relation):
-            continue
-
         s_file.write("%s\t%s\t1.0\n" %(relation, relation))
     r_file.close()
     s_file.close()
@@ -24,14 +19,11 @@ if __name__ == "__main__":
             type=str, help="Relations file")
     parser.add_argument("-s", "--seed_file",
             type=str, help="Seed file")
-    parser.add_argument("-k", "--kb",
-            type=str, help="KB")
 
     args = parser.parse_args()
     generate_seed_file(
             args.relations_file,
-            args.seed_file,
-            args.kb)
+            args.seed_file)
 
 
 

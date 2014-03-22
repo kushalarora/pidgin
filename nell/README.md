@@ -9,3 +9,7 @@ This can be run as
 NELL relations are extracted from kb_relations by using following command:
     cat yago_and_NELL.txt freebase_and_NELL.txt kbp_and_NELL.txt | tr " " "\n"|tr "\t" "\n"|sort | uniq  | grep concept >../nell/nell_relations.txt
 
+
+The command to construct Nell Relation Entity Pair Edge Graph and corresponding precusor to Noun Phrase Pair Verb and Entity Pair Noun Phrase Pair Edge
+
+    python construct_graph.py -r ./nell_relations.txt -g ~/graph/nell_graph -n ~/np_list/nell_np_list
