@@ -91,14 +91,29 @@ class NellRelationGraph:
             Must handling encoding as python by default treaats string to ascii.
         """
         np_file = open(self.np_file, 'a+')
-
+        nps = set([])
         for e_literal in entity_literals:
             for v_literal in value_literals:
-                logging.info("      NELL::%s %s" % (e_literal, v_literal))
-                np_file.write("%s\n" % "\t".join([e_literal.encode('utf-8'),
-                                                    v_literal.encode('utf-8'),
-                                                    entity_pair.encode('utf-8'), "nell"]))
+                tup = (self.preprocess_np(e_literal),
+                                            self.preprocess_np(v_literal))
+                logging.info("      NELL::%s %s" % tup)
+                nps.add(tup)
+        for (e_literal, v_literal) in nps:
+            np_file.write("%s\n" % "\t".join([e_literal.encode('utf-8'),
+                                                v_literal.encode('utf-8'),
+                                                entity_pair.encode('utf-8'), "nell"]))
         np_file.close()
+
+    def preprocess_np(self, np):
+        """ Conditions np pairs for better match.
+            Condition includes things like lowercasing, replacing "-" and "_" by " ", removing suffixes like "_(Film)"
+        """
+        match = re.match("(.*?)[_ ]\(.*?\)", np)
+        if match:
+            np = match.group(1)
+
+        return np.lower().replace("_", " ").replace("-", " ")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -111,7 +126,7 @@ if __name__ == "__main__":
             type=str, help="mongo url for data set")
     parser.add_argument("-p", "--mongo_port", default=27017,
             type=int, help="port of mongo data set")
-    parser.add_argument("--db", default='test',
+    parser.add_argument("--db", default='nell',
             type=str, help="Database name")
     parser.add_argument("-g", "--graph_file",
             type=str, help="Graph file to write entity pair relation edge")

@@ -3,8 +3,7 @@ import argparse
 import logging
 import json
 import os
-
-DONE_TILL_FILE = "./done_till_relation"
+import re
 
 class YagoRelationGraph:
     def __init__(self, relations_file, sparql_endpoint, graph_file, noun_phrase_file):
@@ -20,19 +19,9 @@ class YagoRelationGraph:
 
         if len(relations) == 0:
             assert "Yago::Relations not found"
-        try:
-            done_till_relation_file = open(DONE_TILL_FILE, "r")
-            done_till_relation_index = int(done_till_relation_file.read())
-            done_till_relation_file.close()
-        except IOError:
-            done_till_relation_index = -1
 
-        for i in xrange(done_till_relation_index + 1, len(relations)):
+        for i in xrange(0, len(relations)):
             self._add_entity_relation_edge(relations[i])
-            done_till_relation_file = open(DONE_TILL_FILE, 'w+')
-            done_till_relation_file.write(str(i))
-            done_till_relation_file.close()
-        os.remove(DONE_TILL_FILE)
 
     def _query_sparql(self,  query):
         response = None
@@ -106,9 +95,8 @@ class YagoRelationGraph:
                 return
 
             for result in results["results"]["bindings"]:
-                np_pair =   "%s\t%s" % (result["o1"]["value"].encode('utf-8'),
+                np_pair =    (result["o1"]["value"].encode('utf-8'),
                                             result["o2"]["value"].encode('utf-8'))
-                logging.info("      Yago::%s" % np_pair)
                 np_pairs.append(np_pair)
 
         elif entity1["type"] == 'uri' or \
@@ -130,21 +118,39 @@ class YagoRelationGraph:
             if not results:
                 return
             for result in results["results"]["bindings"]:
-                np_tuple =  (entity1["value"].encode('utf-8'),
+                np_pair =  (entity1["value"].encode('utf-8'),
                                 result["o"]["value"].encode('utf-8')) \
                                     if entity1["type"] != 'uri' else \
                                         (result['o']['value'].encode('utf-8'),
                                             entity2['value'].encode('utf-8'))
 
-                np_pair = '%s\t%s' % np_tuple
-                logging.info("      Yago::%s" % np_pair)
                 np_pairs.append(np_pair)
         else:
             assert "Both Entities are literals %s %s" % (entity1, entity2)
 
+        np_set = set([])
         for np_pair in np_pairs:
+            np_set.add(self.preprocess_np_pair(np_pair))
+
+        for np_pair in np_set:
+            logging.info("      Yago::%s" % np_pair)
             np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "yago"]))
         np_file.close()
+
+    def preprocess_np_pair(self, np_pair):
+        """ Takes np tuple and returns a tab seperated value
+        """
+        return "%s\t%s" %(self.preprocess_np(np_pair[0]),
+                            self.preprocess_np(np_pair[1]))
+    def preprocess_np(self, np):
+        """ Conditions np pairs for better match.
+            Condition includes things like lowercasing, replacing "-" and "_" by " ", removing suffixes like "_(Film)"
+        """
+        match = re.match("(.*?)[_ ]\(.*?\)", np)
+        if match:
+            np = match.group(1)
+
+        return np.lower().replace("_", " ").replace("-", " ")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

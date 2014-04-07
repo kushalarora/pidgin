@@ -20,7 +20,8 @@ class NPEntityVerbEdge:
                 results = self.solr.search('s:"%s" AND o:"%s"' % (np1, np2))
                 docs = results.docs
             except:
-                logging.info("query failed for np pair %s\t%s"  % (np1, np2))
+                pass
+                #   logging.info("query failed for np pair %s\t%s"  % (np1, np2))
 
             if docs:
                 logging.info("NP_Entity_Verb::Returned %d results for np_pair: %s\t%s" % (len(docs), np1, np2))

@@ -19,7 +19,6 @@ def nell_tsv2json(nell_input, nell_output):
                    .lower()
                    .replace(" ", "_") \
                 for field in fields]
-    import pdb; pdb.set_trace()
     for line in inp_file:
         columns = line.split("\t")
 
