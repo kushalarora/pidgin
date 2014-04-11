@@ -44,7 +44,11 @@ class FreebaseRelationGraph:
         logging.info("Freebase::Processing Relation '%s'" % relation)
 
         query = """
+<<<<<<< HEAD
+            PREFIX yago: <http://yago-knowledge.org/resource/>
+=======
             PREFIX basekb: <http://rdf.basekb.com/ns/>
+>>>>>>> 87350278a58fdbf12583a6e9fafbbd0a18f07b49
 
         SELECT ?s ?o
         WHERE {
@@ -101,8 +105,14 @@ class FreebaseRelationGraph:
                 return
 
             for result in results["results"]["bindings"]:
+<<<<<<< HEAD
+                np_pair =   "%s\t%s" % (result["o1"]["value"].encode('utf-8'),
+                                            result["o2"]["value"].encode('utf-8'))
+                logging.info("      Freebase::%s" % np_pair)
+=======
                 np_pair =    (result["o1"]["value"].encode('utf-8'),
                                             result["o2"]["value"].encode('utf-8'))
+>>>>>>> 87350278a58fdbf12583a6e9fafbbd0a18f07b49
                 np_pairs.append(np_pair)
 
         elif entity1["type"] == 'uri' or \
@@ -124,16 +134,31 @@ class FreebaseRelationGraph:
             if not results:
                 return
             for result in results["results"]["bindings"]:
+<<<<<<< HEAD
+                np_tuple =  (entity1["value"].encode('utf-8'),
+=======
                 np_pair =  (entity1["value"].encode('utf-8'),
+>>>>>>> 87350278a58fdbf12583a6e9fafbbd0a18f07b49
                                 result["o"]["value"].encode('utf-8')) \
                                     if entity1["type"] != 'uri' else \
                                         (result['o']['value'].encode('utf-8'),
                                             entity2['value'].encode('utf-8'))
 
+<<<<<<< HEAD
+                np_pair = '%s\t%s' % np_tuple
+                logging.info("      Freebase::%s" % np_pair)
+=======
+>>>>>>> 87350278a58fdbf12583a6e9fafbbd0a18f07b49
                 np_pairs.append(np_pair)
         else:
             assert "Both Entities are literals %s %s" % (entity1, entity2)
 
+<<<<<<< HEAD
+        for np_pair in np_pairs:
+            np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "yago"]))
+        np_file.close()
+
+=======
         np_set = set([])
         for np_pair in np_pairs:
             np_set.add(self.preprocess_np_pair(np_pair))
@@ -158,6 +183,7 @@ class FreebaseRelationGraph:
 
         return np.lower().replace("_", " ").replace("-", " ")
 
+>>>>>>> 87350278a58fdbf12583a6e9fafbbd0a18f07b49
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     FORMAT = '%(levelname)s %(asctime)s %(name)s: %(message)s'
