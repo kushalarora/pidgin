@@ -6,7 +6,7 @@ import os
 import re
 
 class FreebaseRelationGraph:
-    KEY_QUERY = """
+    QUERY = """
             PREFIX basekb: <http://rdf.basekb.com/ns/>
 
             SELECT ?s
@@ -50,7 +50,7 @@ class FreebaseRelationGraph:
             q_arr.append(" %s ?o ." % (entities[len(entities) - 1]))
             q_str = "\n".join(q_arr)
 
-            result = self._query_sparql(q_str)
+            result = self._query_sparql(FreebaseRelationGraph.QUERY % q_str)
             return result["results"]["bindings"]["s"];
 
 
@@ -83,7 +83,6 @@ class FreebaseRelationGraph:
     def _add_entity_relation_edge(self, relation, mp):
 
         logging.info("Freebase::Processing Relation '%s'" % relation)
-
 
         entity1 = self.get_entity(mp["arg1"])
         entity2 = self.get_entity(mp["arg2"])
