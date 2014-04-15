@@ -7,27 +7,69 @@ import re
 
 class FreebaseRelationGraph:
     KEY_QUERY = """
+            PREFIX basekb: <http://rdf.basekb.com/ns/>
 
-                """
+            SELECT ?s
+            WHERE {
+                %s
+            }
+        """
+
     def __init__(self, relations_file, sparql_endpoint, graph_file, noun_phrase_file):
         self.sparql_client = SPARQLWrapper(sparql_endpoint, returnFormat=JSON)
-        self.relations_file = relations_file
-        self.graph_file = graph_file
-        self.np_file = noun_phrase_file
-        self.key_mp = {}        # key to mid
+        self.relations_filename = relations_file
+        self.graph_filename = graph_file
+        self.np_filename = noun_phrase_file
+        self.relations_file = None
+        self.graph_file = None
+        self.np_file = None
 
-    def get_key(self, entity):
-        if
+
+    def _load_relations(self):
+        relations = {}
+        for line in self.relations_file:
+            values = line.strip().split("\t")
+            relation = values[0].split(".")[0]
+
+            relations[relation] = {}
+            relations[relation]['arg1'] = re.findall(r'[^-:]+', values[1])
+            relations[relation]['arg2'] = re.findall(r'[^-:]+', values[2])
+            if len(values) > 3:
+                relations[relation]['filter1'] = re.findall(r'[^-:]+', values[3])
+            if len(values) > 4:
+                relations[relation]['filter2'] = re.findall(r'[^-:]+', values[4])
+        return relations
+
+    def get_entity(self, entities):
+        if len(entities) == 1:
+            q_str = "?s %s ?o ." % entities[0]
+        else:
+            q_arr = ["?s %s ?o0 ." % entities[0]]
+            for i in xrange(1, len(entities) - 1):
+                q_arr.append(" %s ?o%d ." % (entities[i], i))
+            q_arr.append(" %s ?o ." % (entities[len(entities) - 1]))
+            q_str = "\n".join(q_arr)
+
+            result = self._query_sparql(q_str)
+            return result["results"]["bindings"]["s"];
+
 
     def build_graph(self, offset = 0):
-        relations_file = open(self.relations_file, 'r')
-        relations = [relation.strip() for relation in relations_file]
+        import pdb;pdb.set_trace()
+        self.relations_file = open(self.relations_filename, 'r')
+        self.graph_file = open(self.graph_filename, "w+")
+        self.np_file = open(self.np_filename, 'w+')
 
+        relations = self._load_relations()
         if len(relations) == 0:
             assert "Freebase::Relations not found"
 
-        for i in xrange(0, len(relations)):
-            self._add_entity_relation_edge(relations[i])
+        for relation, mp in relations.iteritems():
+            self._add_entity_relation_edge(relation, mp)
+
+        self.relations_file.close()
+        self.graph_file.close()
+        self.np_file.close()
 
     def _query_sparql(self,  query):
         response = None
@@ -38,22 +80,13 @@ class FreebaseRelationGraph:
             logging.error("Freebase::Query Failed%s",query)
         return response
 
-    def _add_entity_relation_edge(self, relation):
-        graph_file = open(self.graph_file, "a+")
+    def _add_entity_relation_edge(self, relation, mp):
 
         logging.info("Freebase::Processing Relation '%s'" % relation)
 
-        query = """
-            PREFIX basekb: <http://rdf.basekb.com/ns/>
 
-        SELECT ?s ?o
-        WHERE {
-                ?s %s ?o .
-        }
-        """ % relation
-
-        results = self._query_sparql(query)
-
+        entity1 = self.get_entity(mp["arg1"])
+        entity2 = self.get_entity(mp["arg2"])
         if not results:
             return
 
@@ -66,9 +99,10 @@ class FreebaseRelationGraph:
                                         self._encode_utf8(entity2))
             logging.info("Freebase::Adding %s-(%s) edge" % (relation, entity_pair))
 
-            graph_file.write("%s\n" % "\t".join([relation, entity_pair, "1.0"]))
+            self.graph_file.write("%s\n" % "\t".join([relation, entity_pair, "1.0"]))
+
             self._add_noun_phrases(result["s"], result["o"], entity_pair)
-        graph_file.close()
+        self.graph_file.close()
 
     def _minify_entity(self, entity):
         value = entity["value"]
@@ -81,7 +115,6 @@ class FreebaseRelationGraph:
 
 
     def _add_noun_phrases(self, entity1, entity2, entity_pair):
-        np_file = open(self.np_file, 'a+')
         np_pairs = []
         if entity1["type"] == 'uri' and \
             entity2["type"] == 'uri':
@@ -140,8 +173,7 @@ class FreebaseRelationGraph:
 
         for np_pair in np_set:
             logging.info("      Freebase::%s" % np_pair)
-            np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "yago"]))
-        np_file.close()
+            self.np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "yago"]))
 
     def preprocess_np_pair(self, np_pair):
         """ Takes np tuple and returns a tab seperated value
