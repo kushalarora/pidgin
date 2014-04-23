@@ -1,0 +1,22 @@
+yago:isKnownFor	concept:ceoof 0.000032	concept:personleadsorganization 0.000020	concept:topmemberoforganization 0.000010
+yago:wasCreatedOnDate	concept:musicartistgenre 0.000000	concept:atdate 0.000000	concept:atlocation 0.000000
+yago:isLocatedIn	_concept:citylocatedincountry 0.000001	_concept:citycapitalofcountry 0.000000	concept:statehascapital 0.000000
+yago:created	concept:agentcreated 0.000146	_concept:bookwriter 0.000058	concept:agentcontributedtocreativework 0.000043
+yago:hasCurrency	concept:countrycurrency 0.006101	concept:drughassideeffect 0.000007	concept:subpartof 0.000005
+yago:participatedIn	_concept:citylocatedincountry 0.000000	concept:atdate 0.000000	concept:teamwontrophy 0.000000
+yago:isLeaderOf	concept:personleadscity 0.001877	concept:personleadsgeopoliticalorganization 0.000181	concept:personhasresidenceincountry 0.000123
+yago:livesIn	concept:personleadscity 0.000054	concept:personleadsgeopoliticalorganization 0.000018	concept:personleadsorganization 0.000008
+yago:happenedIn	_concept:cityliesonriver 0.000001	concept:locationlocatedwithinlocation 0.000000	concept:citycapitalofcountry 0.000000
+yago:isCitizenOf	concept:personhascitizenship 0.000003	_concept:organizationterminatedperson 0.000002	concept:atdate 0.000000
+yago:worksAt	concept:worksfor 0.000007	concept:persongraduatedfromuniversity 0.000000	_concept:organizationhiredperson 0.000000
+yago:graduatedFrom	concept:personhasresidenceingeopoliticallocation 0.000008	concept:personattendsschool 0.000006	concept:persongraduatedfromuniversity 0.000005
+yago:isMarriedTo	concept:hasspouse 0.000616	_concept:hasspouse 0.000603	_concept:haswife 0.000461
+yago:hasCapital	_concept:citycapitalofcountry 0.034001	concept:statehascapital 0.008153	_concept:citylocatedincountry 0.006299
+yago:hasWebsite	concept:organizationhasofficialwebsite 0.000000
+yago:hasWonPrize	concept:teamwontrophy 0.000001	concept:athletewinsawardtrophytournament 0.000001	_concept:sportsgameteam 0.000000
+yago:directed	concept:directordirectedmovie 0.000541	concept:actorstarredinmovie 0.000002	concept:agentcontributedtocreativework 0.000001
+yago:isPoliticianOf	concept:personhasresidenceingeopoliticallocation 0.011088	concept:politicianrepresentslocation 0.004931	concept:malemovedtostateorprovince 0.000336
+yago:actedIn	concept:actorstarredinmovie 0.000064	concept:directordirectedmovie 0.000000	concept:atdate 0.000000
+yago:hasOfficialLanguage	_concept:languageofcountry 0.314187	concept:countrycurrency 0.000055	_concept:citylocatedincountry 0.000001
+yago:hasChild	concept:fatherofperson 0.000019	concept:motherofperson 0.000001	concept:parentofperson 0.000001
+yago:wasBornIn	concept:writerwasbornincity 0.000004	concept:personleadscity 0.000002	concept:personhasresidenceincity 0.000001

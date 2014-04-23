@@ -46,7 +46,7 @@ def generate_score(kb1_relation_file, kb2_relation_file,
                         continue
                     tup = tuple(sorted([value, tmp_arr[i]], reverse=True))
                     if tup not in kb_mapping:
-                        kb_mapping[tup] = 1000000000000000000
+                        kb_mapping[tup] = 100000
 
                     kb_mapping[tup] *= float(tmp_arr[i + 1])
                     if kb_mapping[tup] > 0:
@@ -79,8 +79,8 @@ def generate_score(kb1_relation_file, kb2_relation_file,
                     logging.info("Gold Standard matched: %s %s" % (key, relation))
                     relavent_document += 1
                     break
+            output.write("%s\t%s\n" %(key, "\t".join([ "%s %f" % tup for tup in value[0:int(top_k)] ])))
         total_documents += 1
-        output.write("%s\t%s\n" %(key, "\t".join([ "%s %f" % tup for tup in value[0:20] ])))
 
     print "Precision: %f" % (float(relavent_document)/float(returned_document))
     print "Recall: %f" % (float(relavent_document)/len(kb_gold_map))
