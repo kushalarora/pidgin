@@ -4,15 +4,19 @@ import logging
 import json
 import os
 import re
+import codecs
 
 class FreebaseRelationGraph:
     QUERY = """
             PREFIX basekb: <http://rdf.basekb.com/ns/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-            SELECT ?s
+            SELECT %s
             WHERE {
                 %s
             }
+            LIMIT 10
         """
 
     def __init__(self, relations_file, sparql_endpoint, graph_file, noun_phrase_file):
@@ -25,6 +29,9 @@ class FreebaseRelationGraph:
         self.np_file = None
 
 
+    def preprocess_types(self, type):
+        return "basekb:%s" % ".".join(type[1:].split("/"))
+
     def _load_relations(self):
         relations = {}
         for line in self.relations_file:
@@ -32,33 +39,78 @@ class FreebaseRelationGraph:
             relation = values[0].split(".")[0]
 
             relations[relation] = {}
-            relations[relation]['arg1'] = re.findall(r'[^-:]+', values[1])
-            relations[relation]['arg2'] = re.findall(r'[^-:]+', values[2])
+            relations[relation]['arg1'] = [self.preprocess_types(type) for type in re.findall(r'[^-:]+', values[1])]
+            relations[relation]['arg2'] = [self.preprocess_types(type) for type in re.findall(r'[^-:]+', values[2])]
+            arg1_cvt = ".".join((relations[relation]['arg1'][0]).split(".")[:-1])
+            arg2_cvt = ".".join((relations[relation]['arg2'][0]).split(".")[:-1])
+            assert arg1_cvt == arg2_cvt
+            relations[relation]['cvt'] = arg1_cvt
             if len(values) > 3:
-                relations[relation]['filter1'] = re.findall(r'[^-:]+', values[3])
+                parts = re.findall(r'[^-:]+', values[3])
+                filter = "%s:%s" % (parts[-2], parts[-1])
+                parts = parts[:-2]
+                parts.append(filter)
+                relations[relation]['filter1'] = [self.preprocess_types(type) for type in parts]
             if len(values) > 4:
-                relations[relation]['filter2'] = re.findall(r'[^-:]+', values[4])
+                parts = re.findall(r'[^-:]+', values[4])
+                filter = "%s:%s" % (parts[-2], parts[-1])
+                parts = parts[:-2]
+                parts.append(filter)
+                relations[relation]['filter2'] = [self.preprocess_types(type) for type in parts]
         return relations
 
-    def get_entity(self, entities):
-        if len(entities) == 1:
-            q_str = "?s %s ?o ." % entities[0]
-        else:
-            q_arr = ["?s %s ?o0 ." % entities[0]]
-            for i in xrange(1, len(entities) - 1):
-                q_arr.append(" %s ?o%d ." % (entities[i], i))
-            q_arr.append(" %s ?o ." % (entities[len(entities) - 1]))
-            q_str = "\n".join(q_arr)
+    def is_name_query(self, type):
+        return type.split(".")[-1] == 'name'
 
-            result = self._query_sparql(FreebaseRelationGraph.QUERY % q_str)
-            return result["results"]["bindings"]["s"];
+    def get_other_query(self, type, is_subject):
+        query_obj = "?s" if is_subject else "?o"
+        return ("\t".join(["?cvt", type , query_obj, "."]))
+
+    def  get_literal(self, is_subject, is_cvt=False):
+        (type, lit) = ("?s", "?sl") if is_subject else ("?cvt", "?cl") if is_cvt else ("?o", "?ol")
+        return "\t".join([type, "rdfs:label", lit, "."])
+
+    def get_cvt(self, type):
+        return "\t".join(["?cvt", "a", type, "."])
+
+    def get_filter_str(self, is_subject):
+        query_obj = "?sl" if is_subject else "?ol"
+        return "FILTER (lang(%s) = 'en')" % query_obj
+
+    def get_query(self, mp):
+        (cvt, subject, object, filter1, filter2 ) = (mp['cvt'], mp['arg1'], mp['arg2'], mp.get('filter1', None), mp.get('filter2', None))
+        if len(subject) > 1 or len(object) > 1 or  filter1 or  filter2:
+            return None
+        q_arr = []
+        subject_name_q = True
+        object_name_q = True
+        q_arr.append(self.get_cvt(cvt))
+        if not self.is_name_query(subject[0]):
+            subject_name_q = False
+            q_arr.append(self.get_other_query(subject[0], True))
+        if not self.is_name_query(object[0]):
+            object_name_q = False
+            q_arr.append(self.get_other_query(object[0], False))
+
+        q_str = "\n".join(q_arr)
+
+        q_arg = "*"
+
+        results = self._query_sparql(self.QUERY %(q_arg, q_str))
+        tup_arr = []
+        for result in results["results"]["bindings"]:
+            subject = result["s"] if not subject_name_q else result["cvt"]
+            object = result["o"] if not object_name_q else result["cvt"]
+
+            tup_arr.append((subject, object))
+        return tup_arr
 
 
     def build_graph(self, offset = 0):
-        import pdb;pdb.set_trace()
         self.relations_file = open(self.relations_filename, 'r')
-        self.graph_file = open(self.graph_filename, "w+")
-        self.np_file = open(self.np_filename, 'w+')
+        self.graph_file = codecs.open(self.graph_filename, "w+", encoding='utf-8')
+
+        self.np_file = codecs.open(self.np_filename, 'w+', encoding='utf-8')
 
         relations = self._load_relations()
         if len(relations) == 0:
@@ -71,6 +123,21 @@ class FreebaseRelationGraph:
         self.graph_file.close()
         self.np_file.close()
 
+    def _add_entity_relation_edge(self, relation, mp):
+
+        logging.info("Freebase::Processing Relation '%s'" % relation)
+        results = self.get_query(mp)
+        if not results:
+            return
+
+        for (subject, object) in results:
+            entity_pair = "%s %s" % (self._minify_entity(subject),
+                                        self._minify_entity(object))
+            logging.info("Freebase::Adding %s-(%s) edge" % (relation, entity_pair))
+
+            self.graph_file.write("%s\n" % "\t".join([relation, entity_pair, "1.0"]))
+            self._add_noun_phrases(subject, object, entity_pair)
+
     def _query_sparql(self,  query):
         response = None
         self.sparql_client.setQuery(query)
@@ -80,37 +147,13 @@ class FreebaseRelationGraph:
             logging.error("Freebase::Query Failed%s",query)
         return response
 
-    def _add_entity_relation_edge(self, relation, mp):
-
-        logging.info("Freebase::Processing Relation '%s'" % relation)
-
-        entity1 = self.get_entity(mp["arg1"])
-        entity2 = self.get_entity(mp["arg2"])
-        if not results:
-            return
-
-        for result in results["results"]["bindings"]:
-
-            (entity1, entity2) = (self._minify_entity(result["s"]),
-                                    self._minify_entity(result["o"]))
-            entity_pair = "%s %s" % (self._encode_utf8(entity1),
-
-                                        self._encode_utf8(entity2))
-            logging.info("Freebase::Adding %s-(%s) edge" % (relation, entity_pair))
-
-            self.graph_file.write("%s\n" % "\t".join([relation, entity_pair, "1.0"]))
-
-            self._add_noun_phrases(result["s"], result["o"], entity_pair)
-        self.graph_file.close()
 
     def _minify_entity(self, entity):
         value = entity["value"]
         if entity["type"] == "uri":
-            value = entity["value"].replace("http://yago-knowledge.org/resource/", "yago:")
+            value = entity["value"].replace("http://rdf.basekb.com/ns/", "basekb:")
         return value
 
-    def _encode_utf8(self, entity):
-        return entity.encode('utf-8')
 
 
     def _add_noun_phrases(self, entity1, entity2, entity_pair):
@@ -124,6 +167,9 @@ class FreebaseRelationGraph:
                 WHERE {
                          <%s> rdfs:label ?o1 .
                          <%s> rdfs:label ?o2 .
+                        FILTER (lang(?o1) = 'en')
+                        FILTER (lang(?o2) = 'en')
+
                 }
             """ % (entity1["value"], entity2["value"])
 
@@ -133,8 +179,8 @@ class FreebaseRelationGraph:
                 return
 
             for result in results["results"]["bindings"]:
-                np_pair =    (result["o1"]["value"].encode('utf-8'),
-                                            result["o2"]["value"].encode('utf-8'))
+                np_pair =    (result["o1"]["value"],
+                                            result["o2"]["value"])
                 np_pairs.append(np_pair)
 
         elif entity1["type"] == 'uri' or \
@@ -148,6 +194,7 @@ class FreebaseRelationGraph:
                 SELECT ?o
                 WHERE {
                          <%s> rdfs:label ?o .
+                        FILTER (lang(?o) = 'en')
                 }
             """ % entity
 
@@ -156,11 +203,11 @@ class FreebaseRelationGraph:
             if not results:
                 return
             for result in results["results"]["bindings"]:
-                np_pair =  (entity1["value"].encode('utf-8'),
-                                result["o"]["value"].encode('utf-8')) \
+                np_pair =  (entity1["value"],
+                                result["o"]["value"]) \
                                     if entity1["type"] != 'uri' else \
-                                        (result['o']['value'].encode('utf-8'),
-                                            entity2['value'].encode('utf-8'))
+                                        (result['o']['value'],
+                                            entity2['value'])
 
                 np_pairs.append(np_pair)
         else:
@@ -172,7 +219,8 @@ class FreebaseRelationGraph:
 
         for np_pair in np_set:
             logging.info("      Freebase::%s" % np_pair)
-            self.np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "yago"]))
+            self.np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "freebase"]))
+
 
     def preprocess_np_pair(self, np_pair):
         """ Takes np tuple and returns a tab seperated value
