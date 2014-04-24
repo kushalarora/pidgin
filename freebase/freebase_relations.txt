@@ -1,79 +1,79 @@
-freebase:relation_1.tsv	/business/business_location/name	/business/business_location/parent_company
-freebase:relation_2.tsv	/business/acquisition/acquiring_company	/business/acquisition/company_acquired
-freebase:relation_3.tsv	/film/performance/actor	/film/performance/film
-freebase:relation_4.tsv	/film/film/name	/film/film/directed_by
-freebase:relation_5.tsv	/sports/pro_sports_played/athlete	/sports/pro_sports_played/sport
-freebase:relation_6.tsv	/architecture/structure/name	/architecture/structure/address:/location/mailing_address/id-/location/mailing_address/citytown
-freebase:relation_7.tsv	/organization/leadership/person	/organization/leadership/organization	/organization/leadership/person-/organization/leadership/role:Chief Executive Officer
-freebase:relation_8.tsv	/location/country/capital	/location/country/name
-freebase:relation_9.tsv	/location/location/name:/location/citytown/name	/location/location/containedby:/location/country/name
-freebase:relation_10.tsv	/location/location/name:/location/citytown/name	/location/location/containedby:/location/us_state/name
-freebase:relation_11.tsv	/business/industry/companies	/business/industry/name
-freebase:relation_12.tsv	/location/country/name	/location/country/currency_used
-freebase:relation_13.tsv	/business/business_location/parent_company	/business/business_location/address:/location/mailing_address/id-/location/mailing_address/citytown
-freebase:relation_14.tsv	/business/business_location/parent_company	/business/business_location/address:/location/mailing_address/id-/location/mailing_address/citytown:/location/location/name-/location/location/containedby:/location/country/name
-freebase:relation_15.tsv	/organization/organization/name	/organization/organization/headquarters:/location/mailing_address/id-/location/mailing_address/citytown
-freebase:relation_16.tsv	/sports/sports_league_participation/league	/sports/sports_league_participation/team:/sports/sports_team/name-/sports/sports_team/arena_stadium
-freebase:relation_17.tsv	/music/group_member/name	/music/group_member/instruments_played
-freebase:relation_18.tsv	/music/artist/name	/music/artist/genre
-freebase:relation_19.tsv	/music/group_membership/member	/music/group_membership/group
-freebase:relation_20.tsv	/book/newspaper/name	/book/newspaper/headquarters:/location/mailing_address/id-/location/mailing_address/citytown
-freebase:relation_21.tsv	/government/politician/name	/government/politician/government_positions_held:/government/government_position_held/id-/government/government_position_held/office_position_or_title
-freebase:relation_22.tsv	/business/company_product_relationship/company	/business/company_product_relationship/consumer_product
-freebase:relation_23.tsv	/broadcast/radio_station/name	/broadcast/radio_station/serves_area:/location/citytown/name
-freebase:relation_24.tsv	/sports/sports_championship_event/name	/sports/sports_championship_event/runner_up
-freebase:relation_25.tsv	/sports/sports_championship_event/name	/sports/sports_championship_event/champion:/sports/sports_team/name-/sports/sports_team/sport
-freebase:relation_26.tsv	/sports/sports_championship_event/name	/sports/sports_championship_event/champion
-freebase:relation_27.tsv	/sports/sports_equipment/sport_used_for	/sports/sports_equipment/name
-freebase:relation_28.tsv	/sports/sports_team/sport	/sports/sports_team/arena_stadium
-freebase:relation_29.tsv	/sports/sports_facility/name	/sports/sports_facility/name:/location/location/name-/location/location/containedby:/location/citytown/name
-freebase:relation_30.tsv	/sports/sports_team/name	/sports/sports_team/arena_stadium
-freebase:relation_31.tsv	/sports/sports_team/name	/sports/sports_team/location:/location/citytown/name
-freebase:relation_32.tsv	/sports/sports_league_participation/team	/sports/sports_league_participation/league
-freebase:relation_33.tsv	/sports/sports_team/name	/sports/sports_team/sport
-freebase:relation_34.tsv	/sports/sports_team/name	/sports/sports_team/championships:/sports/sports_championship_event/name-/sports/sports_championship_event/championship
-freebase:relation_35.tsv	/broadcast/tv_station/name	/broadcast/tv_station/affiliations:/broadcast/tv_affiliation_duration/id-/broadcast/tv_affiliation_duration/network
-freebase:relation_36.tsv	/broadcast/tv_station/name	/broadcast/tv_station/name:/broadcast/broadcast/name-/broadcast/broadcast/area_served:/location/citytown/name
-freebase:relation_37.tsv	/visual_art/visual_artist/name	/visual_art/visual_artist/art_forms
-freebase:relation_38.tsv	/visual_art/visual_artist/name	/visual_art/visual_artist/associated_periods_or_movements
-freebase:relation_39.tsv	/geography/river/name	/geography/river/cities
-freebase:relation_40.tsv	/travel/tourist_attraction/name	/travel/tourist_attraction/near_travel_destination:/location/citytown/name
-freebase:relation_41.tsv	/architecture/museum/name	/architecture/museum/name:/location/location/name-/location/location/containedby:/location/citytown/name
-freebase:relation_42.tsv	/zoos/zoo/name	/zoos/zoo/name:/location/location/name-/location/location/containedby:/location/citytown/name
-freebase:relation_43.tsv	/travel/accommodation/name	/travel/accommodation/name:/location/location/name-/location/location/containedby:/location/citytown/name
-freebase:relation_44.tsv	/dining/restaurant/name	/dining/restaurant/name:/business/business_location/name-/business/business_location/address:/location/mailing_address/id-/location/mailing_address/citytown
-freebase:relation_45.tsv	/education/university/name	/education/university/name:/education/educational_institution/name-/education/educational_institution/campuses:/location/location/name-/location/location/containedby:/location/citytown/name
-freebase:relation_46.tsv	/medicine/hospital/name	/medicine/hospital/name:/location/location/name-/location/location/containedby:/location/citytown/name
-freebase:relation_47.tsv	/language/human_language/name	/language/human_language/countries_spoken_in
-freebase:relation_48.tsv	/language/human_language/name	/language/human_language/region:/location/citytown/name
-freebase:relation_49.tsv	/aviation/airport/name	/aviation/airport/serves:/location/citytown/name
-freebase:relation_50.tsv	/business/shopping_center/name	/business/shopping_center/address:/location/mailing_address/id-/location/mailing_address/citytown
-freebase:relation_51.tsv	/zoos/zoo/name	/zoos/zoo/name:/location/location/name-/location/location/containedby:/location/citytown/name
-freebase:relation_52.tsv	/metropolitan_transit/transit_system/name	/metropolitan_transit/transit_system/area_served:/location/citytown/name
-freebase:relation_53.tsv	/people/profession/name	/people/profession/specialization_of
-freebase:relation_54.tsv	/education/university/departments:/education/department/name-/education/department/field	/education/university/name
-freebase:relation_55.tsv	/automotive/company/name	/automotive/company/make_s:/automotive/make/name-/automotive/make/model_s
-freebase:relation_56.tsv	/people/person/name	/people/person/date_of_birth
-freebase:relation_57.tsv	/people/deceased_person/name	/people/deceased_person/date_of_death
-freebase:relation_58.tsv	/location/location/name	/location/location/containedby
-freebase:relation_59.tsv	/people/place_lived/person	/people/place_lived/location
-freebase:relation_60.tsv	/people/person/name	/people/person/place_of_birth
-freebase:relation_61.tsv	/people/person/name	/people/person/place_of_birth:/location/citytown/name
-freebase:relation_62.tsv	/people/person/parents	/people/person/name	
-freebase:relation_63.tsv	/people/person/name	/people/person/children	/people/person/name-/people/person/gender:Female
-freebase:relation_64.tsv	/people/person/name	/people/person/children	/people/person/name-/people/person/gender:Male
-freebase:relation_65.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling	
-freebase:relation_66.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name	
-freebase:relation_67.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name	
-freebase:relation_68.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse	
-freebase:relation_69.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name	
-freebase:relation_70.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name	
-freebase:relation_71.tsv	/people/person/name	/people/person/education:/education/education/id-/education/education/institution
-freebase:relation_72.tsv	/government/politician/name	/government/politician/government_positions_held:/government/government_position_held/id-/government/government_position_held/office_position_or_title	
-freebase:relation_73.tsv	/religion/place_of_worship/name	/religion/place_of_worship/religion
-freebase:relation_74.tsv	/internet/website_owner/name	/internet/website_owner/website_owned
-freebase:relation_75.tsv	/medicine/drug/name	/medicine/drug/name:/medicine/medical_treatment/name-/medicine/medical_treatment/used_to_treat
-freebase:relation_76.tsv	/medicine/drug/name	/medicine/drug/name:/medicine/medical_treatment/name-/medicine/medical_treatment/side_effects
-freebase:relation_77.tsv	/business/employer/name	/business/employer/employees:/business/employment_tenure/id-/business/employment_tenure/person
-freebase:relation_78.tsv	/people/person/name	/people/person/education:/education/education/id-/education/education/institution	/people/person/name-/people/person/education:/education/education/id-/education/education/degree:NOTNULL
-freebase:relation_79.tsv	/wine/wine_producer/name	/wine/wine_producer/wines
+freebase:relation_1.tsv####/business/business_location/name####/business/business_location/parent_company
+freebase:relation_2.tsv####/business/acquisition/acquiring_company####/business/acquisition/company_acquired
+freebase:relation_3.tsv####/film/performance/actor####/film/performance/film
+freebase:relation_4.tsv####/film/film/name####/film/film/directed_by
+freebase:relation_5.tsv####/sports/pro_sports_played/athlete####/sports/pro_sports_played/sport
+freebase:relation_6.tsv####/architecture/structure/name####/architecture/structure/address:/location/mailing_address/id-/location/mailing_address/citytown
+freebase:relation_7.tsv####/organization/leadership/person####/organization/leadership/organization####/organization/leadership/person-/organization/leadership/role:Chief Executive Officer
+freebase:relation_8.tsv####/location/country/capital####/location/country/name
+freebase:relation_9.tsv####/location/location/name:/location/citytown/name####/location/location/containedby:/location/country/name
+freebase:relation_10.tsv####/location/location/name:/location/citytown/name####/location/location/containedby:/location/us_state/name
+freebase:relation_11.tsv####/business/industry/companies####/business/industry/name
+freebase:relation_12.tsv####/location/country/name####/location/country/currency_used
+freebase:relation_13.tsv####/business/business_location/parent_company####/business/business_location/address:/location/mailing_address/id-/location/mailing_address/citytown
+freebase:relation_14.tsv####/business/business_location/parent_company####/business/business_location/address:/location/mailing_address/id-/location/mailing_address/citytown:/location/location/name-/location/location/containedby:/location/country/name
+freebase:relation_15.tsv####/organization/organization/name####/organization/organization/headquarters:/location/mailing_address/id-/location/mailing_address/citytown
+freebase:relation_16.tsv####/sports/sports_league_participation/league####/sports/sports_league_participation/team:/sports/sports_team/name-/sports/sports_team/arena_stadium
+freebase:relation_17.tsv####/music/group_member/name####/music/group_member/instruments_played
+freebase:relation_18.tsv####/music/artist/name####/music/artist/genre
+freebase:relation_19.tsv####/music/group_membership/member####/music/group_membership/group
+freebase:relation_20.tsv####/book/newspaper/name####/book/newspaper/headquarters:/location/mailing_address/id-/location/mailing_address/citytown
+freebase:relation_21.tsv####/government/politician/name####/government/politician/government_positions_held:/government/government_position_held/id-/government/government_position_held/office_position_or_title
+freebase:relation_22.tsv####/business/company_product_relationship/company####/business/company_product_relationship/consumer_product
+freebase:relation_23.tsv####/broadcast/radio_station/name####/broadcast/radio_station/serves_area:/location/citytown/name
+freebase:relation_24.tsv####/sports/sports_championship_event/name####/sports/sports_championship_event/runner_up
+freebase:relation_25.tsv####/sports/sports_championship_event/name####/sports/sports_championship_event/champion:/sports/sports_team/name-/sports/sports_team/sport
+freebase:relation_26.tsv####/sports/sports_championship_event/name####/sports/sports_championship_event/champion
+freebase:relation_27.tsv####/sports/sports_equipment/sport_used_for####/sports/sports_equipment/name
+freebase:relation_28.tsv####/sports/sports_team/sport####/sports/sports_team/arena_stadium
+freebase:relation_29.tsv####/sports/sports_facility/name####/sports/sports_facility/name:/location/location/name-/location/location/containedby:/location/citytown/name
+freebase:relation_30.tsv####/sports/sports_team/name####/sports/sports_team/arena_stadium
+freebase:relation_31.tsv####/sports/sports_team/name####/sports/sports_team/location:/location/citytown/name
+freebase:relation_32.tsv####/sports/sports_league_participation/team####/sports/sports_league_participation/league
+freebase:relation_33.tsv####/sports/sports_team/name####/sports/sports_team/sport
+freebase:relation_34.tsv####/sports/sports_team/name####/sports/sports_team/championships:/sports/sports_championship_event/name-/sports/sports_championship_event/championship
+freebase:relation_35.tsv####/broadcast/tv_station/name####/broadcast/tv_station/affiliations:/broadcast/tv_affiliation_duration/id-/broadcast/tv_affiliation_duration/network
+freebase:relation_36.tsv####/broadcast/tv_station/name####/broadcast/tv_station/name:/broadcast/broadcast/name-/broadcast/broadcast/area_served:/location/citytown/name
+freebase:relation_37.tsv####/visual_art/visual_artist/name####/visual_art/visual_artist/art_forms
+freebase:relation_38.tsv####/visual_art/visual_artist/name####/visual_art/visual_artist/associated_periods_or_movements
+freebase:relation_39.tsv####/geography/river/name####/geography/river/cities
+freebase:relation_40.tsv####/travel/tourist_attraction/name####/travel/tourist_attraction/near_travel_destination:/location/citytown/name
+freebase:relation_41.tsv####/architecture/museum/name####/architecture/museum/name:/location/location/name-/location/location/containedby:/location/citytown/name
+freebase:relation_42.tsv####/zoos/zoo/name####/zoos/zoo/name:/location/location/name-/location/location/containedby:/location/citytown/name
+freebase:relation_43.tsv####/travel/accommodation/name####/travel/accommodation/name:/location/location/name-/location/location/containedby:/location/citytown/name
+freebase:relation_44.tsv####/dining/restaurant/name####/dining/restaurant/name:/business/business_location/name-/business/business_location/address:/location/mailing_address/id-/location/mailing_address/citytown
+freebase:relation_45.tsv####/education/university/name####/education/university/name:/education/educational_institution/name-/education/educational_institution/campuses:/location/location/name-/location/location/containedby:/location/citytown/name
+freebase:relation_46.tsv####/medicine/hospital/name####/medicine/hospital/name:/location/location/name-/location/location/containedby:/location/citytown/name
+freebase:relation_47.tsv####/language/human_language/name####/language/human_language/countries_spoken_in
+freebase:relation_48.tsv####/language/human_language/name####/language/human_language/region:/location/citytown/name
+freebase:relation_49.tsv####/aviation/airport/name####/aviation/airport/serves:/location/citytown/name
+freebase:relation_50.tsv####/business/shopping_center/name####/business/shopping_center/address:/location/mailing_address/id-/location/mailing_address/citytown
+freebase:relation_51.tsv####/zoos/zoo/name####/zoos/zoo/name:/location/location/name-/location/location/containedby:/location/citytown/name
+freebase:relation_52.tsv####/metropolitan_transit/transit_system/name####/metropolitan_transit/transit_system/area_served:/location/citytown/name
+freebase:relation_53.tsv####/people/profession/name####/people/profession/specialization_of
+freebase:relation_54.tsv####/education/university/departments:/education/department/name-/education/department/field####/education/university/name
+freebase:relation_55.tsv####/automotive/company/name####/automotive/company/make_s:/automotive/make/name-/automotive/make/model_s
+freebase:relation_56.tsv####/people/person/name####/people/person/date_of_birth
+freebase:relation_57.tsv####/people/deceased_person/name####/people/deceased_person/date_of_death
+freebase:relation_58.tsv####/location/location/name####/location/location/containedby
+freebase:relation_59.tsv####/people/place_lived/person####/people/place_lived/location
+freebase:relation_60.tsv####/people/person/name####/people/person/place_of_birth
+freebase:relation_61.tsv####/people/person/name####/people/person/place_of_birth:/location/citytown/name
+freebase:relation_62.tsv####/people/person/parents####/people/person/name
+freebase:relation_63.tsv####/people/person/name####/people/person/children####/people/person/name-/people/person/gender:Female
+freebase:relation_64.tsv####/people/person/name####/people/person/children####/people/person/name-/people/person/gender:Male
+freebase:relation_65.tsv####/people/person/name####/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling
+freebase:relation_66.tsv####/people/person/name####/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name
+freebase:relation_67.tsv####/people/person/name####/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name
+freebase:relation_68.tsv####/people/person/name####/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse
+freebase:relation_69.tsv####/people/person/name####/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name
+freebase:relation_70.tsv####/people/person/name####/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name
+freebase:relation_71.tsv####/people/person/name####/people/person/education:/education/education/id-/education/education/institution
+freebase:relation_72.tsv####/government/politician/name####/government/politician/government_positions_held:/government/government_position_held/id-/government/government_position_held/office_position_or_title
+freebase:relation_73.tsv####/religion/place_of_worship/name####/religion/place_of_worship/religion
+freebase:relation_74.tsv####/internet/website_owner/name####/internet/website_owner/website_owned
+freebase:relation_75.tsv####/medicine/drug/name####/medicine/drug/name:/medicine/medical_treatment/name-/medicine/medical_treatment/used_to_treat
+freebase:relation_76.tsv####/medicine/drug/name####/medicine/drug/name:/medicine/medical_treatment/name-/medicine/medical_treatment/side_effects
+freebase:relation_77.tsv####/business/employer/name####/business/employer/employees:/business/employment_tenure/id-/business/employment_tenure/person
+freebase:relation_78.tsv####/people/person/name####/people/person/education:/education/education/id-/education/education/institution####/people/person/name-/people/person/education:/education/education/id-/education/education/degree:NOTNULL
+freebase:relation_79.tsv####/wine/wine_producer/name####/wine/wine_producer/wines

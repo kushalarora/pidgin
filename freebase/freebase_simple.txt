@@ -1,0 +1,36 @@
+freebase:relation_1.tsv	/business/business_location/name	/business/business_location/parent_company
+freebase:relation_2.tsv	/business/acquisition/acquiring_company	/business/acquisition/company_acquired
+freebase:relation_3.tsv	/film/performance/actor	/film/performance/film
+freebase:relation_4.tsv	/film/film/name	/film/film/directed_by
+freebase:relation_5.tsv	/sports/pro_sports_played/athlete	/sports/pro_sports_played/sport
+freebase:relation_8.tsv	/location/country/capital	/location/country/name
+freebase:relation_11.tsv	/business/industry/companies	/business/industry/name
+freebase:relation_12.tsv	/location/country/name	/location/country/currency_used
+freebase:relation_17.tsv	/music/group_member/name	/music/group_member/instruments_played
+freebase:relation_18.tsv	/music/artist/name	/music/artist/genre
+freebase:relation_19.tsv	/music/group_membership/member	/music/group_membership/group
+freebase:relation_22.tsv	/business/company_product_relationship/company	/business/company_product_relationship/consumer_product
+freebase:relation_24.tsv	/sports/sports_championship_event/name	/sports/sports_championship_event/runner_up
+freebase:relation_26.tsv	/sports/sports_championship_event/name	/sports/sports_championship_event/champion
+freebase:relation_27.tsv	/sports/sports_equipment/sport_used_for	/sports/sports_equipment/name
+freebase:relation_28.tsv	/sports/sports_team/sport	/sports/sports_team/arena_stadium
+freebase:relation_30.tsv	/sports/sports_team/name	/sports/sports_team/arena_stadium
+freebase:relation_32.tsv	/sports/sports_league_participation/team	/sports/sports_league_participation/league
+freebase:relation_33.tsv	/sports/sports_team/name	/sports/sports_team/sport
+freebase:relation_37.tsv	/visual_art/visual_artist/name	/visual_art/visual_artist/art_forms
+freebase:relation_38.tsv	/visual_art/visual_artist/name	/visual_art/visual_artist/associated_periods_or_movements
+freebase:relation_39.tsv	/geography/river/name	/geography/river/cities
+freebase:relation_47.tsv	/language/human_language/name	/language/human_language/countries_spoken_in
+freebase:relation_53.tsv	/people/profession/name	/people/profession/specialization_of
+freebase:relation_56.tsv	/people/person/name	/people/person/date_of_birth
+freebase:relation_57.tsv	/people/deceased_person/name	/people/deceased_person/date_of_death
+freebase:relation_58.tsv	/location/location/name	/location/location/containedby
+freebase:relation_59.tsv	/people/place_lived/person	/people/place_lived/location
+freebase:relation_60.tsv	/people/person/name	/people/person/place_of_birth
+freebase:relation_62.tsv	/people/person/parents	/people/person/name
+freebase:relation_73.tsv	/religion/place_of_worship/name	/religion/place_of_worship/religion
+freebase:relation_74.tsv	/internet/website_owner/name	/internet/website_owner/website_owned
+freebase:relation_79.tsv	/wine/wine_producer/name	/wine/wine_producer/wines
+freebase:relation_7.tsv	/organization/leadership/person	/organization/leadership/organization	/organization/leadership/person-/organization/leadership/role:Chief Executive Officer
+freebase:relation_63.tsv	/people/person/name	/people/person/children	/people/person/name-/people/person/gender:Female
+freebase:relation_64.tsv	/people/person/name	/people/person/children	/people/person/name-/people/person/gender:Male

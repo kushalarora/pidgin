@@ -1,0 +1,7 @@
+freebase:relation_6.tsv	/architecture/structure/name	/location/location/street_address:/location/mailing_address/citytown
+freebase:relation_13.tsv	/business/business_location/parent_company	/business/business_location/address:/location/mailing_address/citytown
+freebase:relation_14.tsv	/business/business_location/parent_company	/business/business_location/address:/location/mailing_address/citytown:/location/location/name-/location/location/containedby:/location/country/name
+freebase:relation_15.tsv	/organization/organization/name	/organization/organization/headquarters:/location/mailing_address/citytown
+freebase:relation_20.tsv	/book/newspaper/name	/book/newspaper/headquarters:/location/mailing_address/citytown
+freebase:relation_44.tsv	/dining/restaurant/name	/dining/restaurant/name:/business/business_location/name-/business/business_location/address:/location/mailing_address/citytown
+freebase:relation_50.tsv	/business/shopping_center/name	/business/shopping_center/address:/location/mailing_address/citytown

@@ -35,6 +35,9 @@ class FreebaseRelationGraph:
     def _load_relations(self):
         relations = {}
         for line in self.relations_file:
+            if line[0] == "-":
+                logging.info("Ignoring %s" % line)
+                continue
             values = line.strip().split("\t")
             relation = values[0].split(".")[0]
 
