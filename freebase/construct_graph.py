@@ -16,7 +16,7 @@ class FreebaseRelationGraph:
             WHERE {
                 %s
             }
-            LIMIT 10
+            LIMIT 3
         """
 
     def __init__(self, relations_file, sparql_endpoint, graph_file, noun_phrase_file):
@@ -44,9 +44,8 @@ class FreebaseRelationGraph:
             relations[relation] = {}
             relations[relation]['arg1'] = [self.preprocess_types(type) for type in re.findall(r'[^-:]+', values[1])]
             relations[relation]['arg2'] = [self.preprocess_types(type) for type in re.findall(r'[^-:]+', values[2])]
+
             arg1_cvt = ".".join((relations[relation]['arg1'][0]).split(".")[:-1])
-            arg2_cvt = ".".join((relations[relation]['arg2'][0]).split(".")[:-1])
-            assert arg1_cvt == arg2_cvt
             relations[relation]['cvt'] = arg1_cvt
             if len(values) > 3:
                 parts = re.findall(r'[^-:]+', values[3])
@@ -62,12 +61,33 @@ class FreebaseRelationGraph:
                 relations[relation]['filter2'] = [self.preprocess_types(type) for type in parts]
         return relations
 
+    def canonicalize_query(self, type):
+        parts = type.split(".")
+        if parts[-1] == 'name':
+            parts = parts[:-1]
+        return ".".join(parts)
+
     def is_name_query(self, type):
         return type.split(".")[-1] == 'name'
 
-    def get_other_query(self, type, is_subject):
-        query_obj = "?s" if is_subject else "?o"
-        return ("\t".join(["?cvt", type , query_obj, "."]))
+    def create_query(self, types, is_subject):
+        o_p = "?s" if is_subject else "?o"
+        s = "?cvt"
+        use_cvt = True
+        q_arr = []
+        for i in xrange(len(types)):
+            if types[i].endswith("id"):
+                continue
+            if self.is_name_query(types[i]):
+                q_arr.append("\t".join([s, "a", self.canonicalize_query(types[i]), "."]))
+            else:
+                o = o_p + str(i)
+                if i == len(types) - 1 or (i == len(types) - 2 and self.is_name_query(types[i + 1])):
+                    o = o_p
+                    use_cvt = False
+                q_arr.append("\t".join([s, self.canonicalize_query(types[i]) , o, "."]))
+                s = o
+        return (use_cvt, q_arr)
 
     def  get_literal(self, is_subject, is_cvt=False):
         (type, lit) = ("?s", "?sl") if is_subject else ("?cvt", "?cl") if is_cvt else ("?o", "?ol")
@@ -81,22 +101,18 @@ class FreebaseRelationGraph:
         return "FILTER (lang(%s) = 'en')" % query_obj
 
     def get_query(self, mp):
-        (cvt, subject, object, filter1, filter2 ) = (mp['cvt'], mp['arg1'], mp['arg2'], mp.get('filter1', None), mp.get('filter2', None))
-        if len(subject) > 1 or len(object) > 1 or  filter1 or  filter2:
-            return None
+        (cvt, subjects, objects, filters1, filters2 ) = (mp['cvt'], mp['arg1'], mp['arg2'], mp.get('filter1', None), mp.get('filter2', None))
         q_arr = []
         subject_name_q = True
         object_name_q = True
         q_arr.append(self.get_cvt(cvt))
-        if not self.is_name_query(subject[0]):
-            subject_name_q = False
-            q_arr.append(self.get_other_query(subject[0], True))
-        if not self.is_name_query(object[0]):
-            object_name_q = False
-            q_arr.append(self.get_other_query(object[0], False))
+        (subject_name_q, subject_arr) = self.create_query(subjects, True)
+        q_arr.extend(subject_arr)
+        (object_name_q, object_arr) = self.create_query(objects, False)
+        q_arr.extend(object_arr)
 
         q_str = "\n".join(q_arr)
-
+        logging.info("Query String:\n%s" % q_str)
         q_arg = "*"
 
         results = self._query_sparql(self.QUERY %(q_arg, q_str))
@@ -132,11 +148,10 @@ class FreebaseRelationGraph:
         results = self.get_query(mp)
         if not results:
             return
-
         for (subject, object) in results:
             entity_pair = "%s %s" % (self._minify_entity(subject),
                                         self._minify_entity(object))
-            logging.info("Freebase::Adding %s-(%s) edge" % (relation, entity_pair))
+            logging.info("      Freebase::Adding %s-(%s) edge" % (relation, entity_pair))
 
             self.graph_file.write("%s\n" % "\t".join([relation, entity_pair, "1.0"]))
             self._add_noun_phrases(subject, object, entity_pair)
@@ -221,7 +236,7 @@ class FreebaseRelationGraph:
             np_set.add(self.preprocess_np_pair(np_pair))
 
         for np_pair in np_set:
-            logging.info("      Freebase::%s" % np_pair)
+            logging.info("              Freebase::%s" % np_pair)
             self.np_file.write("%s\n" % "\t".join([np_pair, entity_pair, "freebase"]))
 
 
