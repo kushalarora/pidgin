@@ -49,15 +49,9 @@ class FreebaseRelationGraph:
             relations[relation]['cvt'] = arg1_cvt
             if len(values) > 3:
                 parts = re.findall(r'[^-:]+', values[3])
-                filter = "%s:%s" % (parts[-2], parts[-1])
-                parts = parts[:-2]
-                parts.append(filter)
                 relations[relation]['filter1'] = [self.preprocess_types(type) for type in parts]
             if len(values) > 4:
                 parts = re.findall(r'[^-:]+', values[4])
-                filter = "%s:%s" % (parts[-2], parts[-1])
-                parts = parts[:-2]
-                parts.append(filter)
                 relations[relation]['filter2'] = [self.preprocess_types(type) for type in parts]
         return relations
 
@@ -70,7 +64,7 @@ class FreebaseRelationGraph:
     def is_name_query(self, type):
         return type.split(".")[-1] == 'name'
 
-    def create_query(self, types, is_subject):
+    def create_query(self, types, filters, is_subject):
         o_p = "?s" if is_subject else "?o"
         s = "?cvt"
         use_cvt = True
@@ -87,6 +81,22 @@ class FreebaseRelationGraph:
                     use_cvt = False
                 q_arr.append("\t".join([s, self.canonicalize_query(types[i]) , o, "."]))
                 s = o
+        f_p = "?f"
+        s = "?cvt"
+        if filters:
+            for i in xrange(len(filters) - 1):
+                if filters[i].endswith("id"):
+                    continue
+                if self.is_name_query(filters[i]):
+                    q_arr.append("\t".join([s, "a", self.canonicalize_query(filters[i]), "."]))
+                else:
+                    o = f_p + str(i)
+                    q_arr.append("\t".join([s, self.canonicalize_query(filters[i]) , o, "."]))
+                    s = o
+            if filters[i + 1].find("NOTNULL") > -1:
+                q_arr[-1] = "FILTER EXISTS {%s %s %s}" % (f_p + str(i - 1), filters[i], f_p + str (i))
+            else:
+                q_arr.append("FILTER (%s = %s)" % (s, filters[i + 1]))
         return (use_cvt, q_arr)
 
     def  get_literal(self, is_subject, is_cvt=False):
@@ -106,9 +116,9 @@ class FreebaseRelationGraph:
         subject_name_q = True
         object_name_q = True
         q_arr.append(self.get_cvt(cvt))
-        (subject_name_q, subject_arr) = self.create_query(subjects, True)
+        (subject_name_q, subject_arr) = self.create_query(subjects, filters1, True)
         q_arr.extend(subject_arr)
-        (object_name_q, object_arr) = self.create_query(objects, False)
+        (object_name_q, object_arr) = self.create_query(objects, filters2, False)
         q_arr.extend(object_arr)
 
         q_str = "\n".join(q_arr)
