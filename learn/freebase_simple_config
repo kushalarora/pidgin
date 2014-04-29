@@ -9,7 +9,7 @@ data_format = edge_factored
 
 # Specifies the seed label information to be injected into
 # selected nodes at the start of the algorithm.
-seed_file = /mnt/pidgin/nell/nell_seeds
+seed_file = /mnt/pidgin/freebase/freebase_seeds
 
 # Gold labels of nodes (if known). This gold label information
 # is used only during evaluation.
@@ -22,7 +22,7 @@ seed_file = /mnt/pidgin/nell/nell_seeds
 #test_file = data/gold_labels
 
 # Number of label propagation rounds
-iters = 6
+iters = 7
 verbose = true
 
 # All nodes with degree lower than this threshold will be pruned
@@ -50,7 +50,7 @@ beta = 2
 # For nodes for which gold (or seed label) information is not known, the corresponding
 # field is left empty.
 #
-output_file = /mnt/output/nell_label_prop_output
+output_file = /mnt/output/freebase_label_prop_output
 
 
-top_k_neighbors = 15
+top_k_neighbors=15

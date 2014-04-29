@@ -16,7 +16,6 @@ class FreebaseRelationGraph:
             WHERE {
                 %s
             }
-            LIMIT 3
         """
 
     def __init__(self, relations_file, sparql_endpoint, graph_file, noun_phrase_file):

@@ -12,7 +12,7 @@ def split_np_files(np_files, out_dir):
             We open files corresponding to each first character and append to it all noun phraes pair starting with it.
     """
     handles = {}        # lowerOf(first char) => opened file handle
-    index = 0
+    index = 1
     for file_name in np_files:
         logging.info("Opening input file %s" % file_name)
         file = open(file_name, 'r')
