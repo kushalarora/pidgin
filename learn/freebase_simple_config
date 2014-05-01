@@ -22,7 +22,7 @@ seed_file = /mnt/pidgin/freebase/freebase_seeds
 #test_file = data/gold_labels
 
 # Number of label propagation rounds
-iters = 7
+iters = 10
 verbose = true
 
 # All nodes with degree lower than this threshold will be pruned
@@ -54,3 +54,6 @@ output_file = /mnt/output/freebase_label_prop_output
 
 
 top_k_neighbors=15
+hdfs_input_pattern = /user/karora/freebase/freebase_nell_hadoop_graph
+hdfs_output_base = /user/karora/freebase_output
+
