@@ -1,0 +1,10 @@
+This directory contains the code to do alignment over the generated graph.
+
+The files in this directory are:
+    1. freebase_simple_config
+        junto config file for freebase and nell relation alignment. The values needs to be changed as per need basis.
+
+    2. nell_simple_config
+        junto config file for freebase and NELL relation alignment
+
+
