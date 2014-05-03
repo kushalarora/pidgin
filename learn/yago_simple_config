@@ -4,7 +4,7 @@
 # edge in the graph. For example,
 # <source_node>TAB<target_node>TAB<edge_weight>
 #
-graph_file = /mnt/graphs/graph
+graph_file = /mnt/graphs/yago_nell_inst_graph
 data_format = edge_factored
 
 # Specifies the seed label information to be injected into
@@ -50,7 +50,7 @@ beta = 2
 # For nodes for which gold (or seed label) information is not known, the corresponding
 # field is left empty.
 #
-output_file = /mnt/output/yago_label_prop_output
+output_file = /mnt/output/yago_nell_inst.out
 
 
 top_k_neighbors=15
