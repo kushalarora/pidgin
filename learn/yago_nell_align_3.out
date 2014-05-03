@@ -13,6 +13,3 @@ yago:isPoliticianOf,concept:personhasresidenceingeopoliticallocation,concept:pol
 yago:actedIn,concept:actorstarredinmovie,concept:directordirectedmovie,concept:atdate
 yago:hasOfficialLanguage,_concept:languageofcountry,concept:countrycurrency,_concept:citylocatedincountry
 yago:hasChild,concept:fatherofperson,concept:motherofperson,concept:parentofperson
-Precision: 0.681818
-Recall: 0.652174
-F1 Score: 0.666667

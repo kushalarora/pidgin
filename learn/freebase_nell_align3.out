@@ -36,6 +36,3 @@ freebase:relation_23,concept:radiostationincity,concept:specializationof,concept
 freebase:relation_20,concept:newspaperincity,_concept:sportsgamewinner,concept:leaguestadiums
 freebase:relation_28,concept:sportusesstadium,concept:teamplaysincity,concept:leaguestadiums
 freebase:relation_29,concept:stadiumlocatedincity,_concept:proxyfor,concept:radiostationincity
-Precision: 0.487179
-Recall: 0.481013
-F1 Score: 0.484076

@@ -75,7 +75,7 @@ def generate_score(kb1_relation_file, kb2_relation_file,
                 if relation in kb_gold_map[key]:
                     logging.info("Gold Standard matched: %s %s" % (key, relation))
                     relavent_document += 1
-                    output.write("%s,%s\n" %(key, ",".join([ "%s" % tup[0] for tup in value[0:int(top_k)] ])))
+                    output.write("%s\t%s\n" %(key, "\t".join([ "%s" % tup[0] for tup in value[0:int(top_k)] ])))
                     break
         total_documents += 1
 
