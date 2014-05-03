@@ -1,0 +1,18 @@
+yago:isKnownFor,concept:ceoof,concept:personleadsorganization,concept:topmemberoforganization
+yago:wasCreatedOnDate,concept:musicartistgenre,concept:atdate,concept:atlocation
+yago:created,concept:agentcreated,_concept:bookwriter,concept:agentcontributedtocreativework
+yago:hasCurrency,concept:countrycurrency,concept:drughassideeffect,concept:subpartof
+yago:isCitizenOf,concept:personhascitizenship,_concept:organizationterminatedperson,concept:atdate
+yago:worksAt,concept:worksfor,concept:persongraduatedfromuniversity,_concept:organizationhiredperson
+yago:graduatedFrom,concept:personhasresidenceingeopoliticallocation,concept:personattendsschool,concept:persongraduatedfromuniversity
+yago:isMarriedTo,concept:hasspouse,_concept:hasspouse,_concept:haswife
+yago:hasCapital,_concept:citycapitalofcountry,concept:statehascapital,_concept:citylocatedincountry
+yago:hasWonPrize,concept:teamwontrophy,concept:athletewinsawardtrophytournament,_concept:sportsgameteam
+yago:directed,concept:directordirectedmovie,concept:actorstarredinmovie,concept:agentcontributedtocreativework
+yago:isPoliticianOf,concept:personhasresidenceingeopoliticallocation,concept:politicianrepresentslocation,concept:malemovedtostateorprovince
+yago:actedIn,concept:actorstarredinmovie,concept:directordirectedmovie,concept:atdate
+yago:hasOfficialLanguage,_concept:languageofcountry,concept:countrycurrency,_concept:citylocatedincountry
+yago:hasChild,concept:fatherofperson,concept:motherofperson,concept:parentofperson
+Precision: 0.681818
+Recall: 0.652174
+F1 Score: 0.666667
