@@ -26,13 +26,19 @@ class NellGraphBuilder(BaseGraphBuilder):
         # Entity to label strings
         self.entity_to_label_map = {}
 
-        super("NELL", relations_file, entity_relation_file, label_file)
+        BaseGraphBuilder.__init__(self, "NELL", relations_file, entity_relation_file, label_file)
 
 
-    def _canonicalize(value):
+    def _canonicalize(self, value):
         return "NELL::%s" % value
 
-    def _query_entity_pair(relation):
+    def canonicalizeRelation(self, relation):
+        """ For query purpose _concept has to be transformed to concept.
+            Reversal of relation is treated in calling function.
+        """
+        return relation if not self._isAReverseConcept(relation) else relation[1:]
+
+    def _query_entity_pair(self, relation):
         logging.info("NELL::Processing Relation '%s'" % relation)
 
         self.entity_to_label_map = {}
@@ -46,14 +52,14 @@ class NellGraphBuilder(BaseGraphBuilder):
                     entries["entity_literalstrings"], self._canonicalize(entries["value"]), entries["value_literalstrings"])
 
             self.entity_to_label_map[entity] = entity_literals
-            self.entity_to_label_map[value] = value_literals
+            self.entity_to_label_map[value] =  value_literals
+            entity_pairs.append([entity, value] if self._isAReverseConcept(relation) else [value, entity])
 
-            entities = (entity, value) if self._isAReverseConcept(relation) else (value, entity)
-            entity_pairs.append(entities)
-
+#            logging.info("\nRelation-Entity Pair: %s-%s\n\tEntity Literal: %s\n\tValue Literal: %s" % (relation, entity_pairs[-1], entity_literals, value_literals))
+        logging.info("Number Entity Pair: %d" % len(entity_pairs))
         return entity_pairs
 
-    def _query_labels(entity):
+    def _query_labels(self, entity):
         return self.entity_to_label_map[entity]
 
     def _isAReverseConcept(self, entity):
@@ -83,7 +89,6 @@ if __name__ == "__main__":
             type=str, help="File to write noun phrase pair for entity pair")
 
     args = parser.parse_args()
-    import pdb;pdb.set_trace()
     grapher =   NellGraphBuilder(
                 args.relations_file,    # relation file
                 args.mongo_url,         # url to mongo server(optional)
