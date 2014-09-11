@@ -126,7 +126,7 @@ if __name__ == "__main__":
             type=str, help="mongo url for data set")
     parser.add_argument("-p", "--mongo_port", default=27017,
             type=int, help="port of mongo data set")
-    parser.add_argument("--db", default='nell',
+    parser.add_argument("--db", default='test',
             type=str, help="Database name")
     parser.add_argument("-g", "--graph_file",
             type=str, help="Graph file to write entity pair relation edge")
