@@ -23,6 +23,9 @@ class BaseGraphBuilder:
 
     def _query_labels(self, entity):
         raise NotImplementedError("Subclass must ovverride query_label method")
+    
+    def _relation_name(self, relation):
+        return relation 
 
     def build_graph(self):
         label_set = set([])
@@ -31,7 +34,7 @@ class BaseGraphBuilder:
             relation = relation.strip()
             entity_pairs = self._query_entity_pair(relation)
             entity_pair_stringify = self.INTRA_VALUE_DELIMITER.join([self.INTRA_ENTITY_PAIR_DELIMITER.join(pair) for pair in entity_pairs])
-            relation_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([relation, entity_pair_stringify]).encode('utf-8'))
+            relation_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([self._relation_name(relation), entity_pair_stringify]).encode('utf-8'))
 
             label_file = open(self.entity_label_filename, 'a+')
             for entity_pair in entity_pairs:
