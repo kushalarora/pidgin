@@ -36,8 +36,8 @@ Indexing SVO triples:
         ./solr_upload_svo.sh <ip:port of solr> <svo triples location> <split size>
 
 To splitt the NP files on basis of their first character, run:
-    python np_splitter.py -f ~/np_list/*_np_list -d ~/np_split
+    python np_splitter.py -f <all np files space seperated> -d <directory for np files>
 
 
 To build graph with NP pair Entity Pair Edge and NP Pair Verb Pair Edge graph run
-    python add_np_edges.py -s http://localhost:3030/solr -f ~/np_split/* -g ~/graph/np_graph
+    python add_np_edges.py -s <solr url> -f <np files directory> -g <graph to add np edges>

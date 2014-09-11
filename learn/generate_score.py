@@ -115,9 +115,9 @@ if __name__ == "__main__":
     parser.add_argument("-k","--top_k",
             type=str, help="top k value")
     parser.add_argument("--gold",
-            type=str, help="Output file")
+            type=str, help="Gold standard file for kb1 and kb2")
     parser.add_argument("-s",
-             dest='subsumption', action='store_true', help="Output file")
+             dest='subsumption', action='store_true', help="Is a subsumption relation")
     args = parser.parse_args()
     generate_score(
             args.kb1_relations,
