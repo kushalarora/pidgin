@@ -3,9 +3,7 @@ from base_graph_builder import BaseGraphBuilder
 import argparse
 import logging
 import json
-import os
 import re
-import codecs
 
 class FreebaseGraphBuilder(BaseGraphBuilder):
     QUERY = """
@@ -29,8 +27,7 @@ class FreebaseGraphBuilder(BaseGraphBuilder):
 
 
     def _canonicalize(self, value):
-        value.replace("http://rdf.basekb.com/ns/", "basekb:")
-        return value
+        return value.replace("http://rdf.basekb.com/ns/", "basekb:")
 
     def _query_sparql(self,  query):
         response = None
@@ -104,14 +101,15 @@ class FreebaseGraphBuilder(BaseGraphBuilder):
             subject = result["s"] if not subject_name_q else result["cvt"]
             object = result["o"] if not object_name_q else result["cvt"]
 
-            tup_arr.append((subject, object))
+            entity_pair = (self._canonicalize(subject["value"]),
+                            self._canonicalize(object["value"]))
+            tup_arr.append(entity_pair)
 
         logging.info("      Freebase::Adding %s-(%s) edge" % (relation_map['name'], entity_pair))
         return tup_arr
 
 
     def _query_labels(self, entity):
-        np_pairs = []
         query = """
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -121,15 +119,14 @@ class FreebaseGraphBuilder(BaseGraphBuilder):
                     FILTER (lang(?o1) = 'en')
 
             }
-        """
-        % entity1.replace("basekb:", "http://rdf.basekb.com/ns/")
+        """ % entity.replace("basekb:", "http://rdf.basekb.com/ns/")
 
         results = self._query_sparql(query)
 
         np_values = []
         if results:
             for result in results["results"]["bindings"]:
-                np_value.append(result["o1"]["value"])
+                np_values.append(result["o1"]["value"])
 
         return np_values
 

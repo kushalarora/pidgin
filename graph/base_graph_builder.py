@@ -23,9 +23,9 @@ class BaseGraphBuilder:
 
     def _query_labels(self, entity):
         raise NotImplementedError("Subclass must ovverride query_label method")
-    
+
     def _relation_name(self, relation):
-        return relation 
+        return relation
 
     def build_graph(self):
         label_set = set([])
