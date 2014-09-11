@@ -3,6 +3,7 @@ This source code is implementation of PIDGIN system from the paper PIDGIN: Ontol
 The directory structure is given below. Each directory contains source code relating to running code in that directory.
 
 PIDGIN:
+
     - freebase
         Contains source related to running freebase server and creating graph portion corresponding to Freebase entities, relations and noun phrases.
 
@@ -31,6 +32,7 @@ PIDGIN:
 Currently all datasets are present on dsr server under /data/d01.
 
 Freebase
+
     Stored in TDB Format. Run using Jena Fuseki Server. Data present in /data/d01/freebase/data.
 
     Command to run server
@@ -40,6 +42,7 @@ Freebase
         http://<server address:port>/freebase/query [example http://localhost:3031/freebase/query if running from dsr server]
 
 Yago
+
     Stored in TDB Format. Run using Jena Fuseki Server. Data present in /data/d01/yago.
 
     Command to run server
@@ -50,6 +53,7 @@ Yago
 
 
 Nell
+
     Nell data is stored in mongo db. The data is present on /data/d01/nell_data
 
     Command to run server
