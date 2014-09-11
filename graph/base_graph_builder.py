@@ -25,28 +25,26 @@ class BaseGraphBuilder:
         raise NotImplementedError("Subclass must ovverride query_label method")
 
     def build_graph(self):
-        relation_file = open(self.entity_relation_filename, 'a+')
-        label_file = open(self.entity_label_filename, 'a+')
-        label_map = {}
+        label_set = set([])
         for relation in open(self.relation_list):
+            relation_file = open(self.entity_relation_filename, 'a+')
             relation = relation.strip()
             entity_pairs = self._query_entity_pair(relation)
             entity_pair_stringify = self.INTRA_VALUE_DELIMITER.join([self.INTRA_ENTITY_PAIR_DELIMITER.join(pair) for pair in entity_pairs])
             relation_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([relation, entity_pair_stringify]).encode('utf-8'))
 
+            label_file = open(self.entity_label_filename, 'a+')
             for entity_pair in entity_pairs:
-                if entity_pair[0] not in label_map:
+                if entity_pair[0] not in label_set:
                     label_entity1 = self._query_labels(entity_pair[0])
-                    label_map[entity_pair[0]] = label_entity1
-                if entity_pair[1] not in label_map:
+                    label_set.add(entity_pair[0])
+                    label_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([entity_pair[0], self.INTRA_VALUE_DELIMITER.join(label_entity1)]).encode('utf-8'))
+                if entity_pair[1] not in label_set:
                     label_entity2 = self._query_labels(entity_pair[1])
-                    label_map[entity_pair[1]] = label_entity2
-
-        for entity in label_map:
-            label_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([entity, self.INTRA_VALUE_DELIMITER.join(label_map[entity])]).encode('utf-8'))
-
-        relation_file.close()
-        label_file.close()
+                    label_set.add(entity_pair[1])
+                    label_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([entity_pair[1], self.INTRA_VALUE_DELIMITER.join(label_entity2)]).encode('utf-8'))
+            label_file.close()
+            relation_file.close()
 
 
 

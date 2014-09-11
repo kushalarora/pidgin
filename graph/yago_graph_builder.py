@@ -10,12 +10,13 @@ class YagoGraphBuilder(BaseGraphBuilder):
     YAGO_BASE_URL = "http://yago-knowledge.org/resource/"
     def __init__(self, relations_file, sparql_endpoint, graph_file, noun_phrase_file):
         self.sparql_client = SPARQLWrapper(sparql_endpoint, returnFormat=JSON)
+        self.sparql_client.method = 'POST'
         self.relations_file = relations_file
-        BaseGraphBuilder.__init__("YAGO", relation_file, graph_file, noun_phrase_file)
+        BaseGraphBuilder.__init__(self, "yago", relations_file, graph_file, noun_phrase_file)
 
 
     def _canonicalize(self, value):
-        return value.replace(YAGO_BASE_URL, "YAGO:")
+        return value.replace(self.YAGO_BASE_URL, "yago:")
 
     def _query_sparql(self,  query):
         response = None
@@ -29,6 +30,7 @@ class YagoGraphBuilder(BaseGraphBuilder):
 
     def _query_entity_pair(self, relation):
         logging.info("Yago::Processing Relation '%s'" % relation)
+        entity_pairs = []
         query = """
             PREFIX yago: <http://yago-knowledge.org/resource/>
 
@@ -39,18 +41,17 @@ class YagoGraphBuilder(BaseGraphBuilder):
         """ % relation
 
         results = self._query_sparql(query)
+        if results:
+            for result in results["results"]["bindings"]:
+                if result["s"]["type"] != "uri" or \
+                        result["o"]["type"] != "uri":
+                            logging.info("\nEntity Pair has a non Uri::%s\n" % result)
+                entity_pair = [self._canonicalize(result["s"]["value"]),
+                                        self._canonicalize(result["o"]["value"])]
+                logging.info("Yago::Adding %s-(%s %s) edge" % (relation, result["s"]["value"], result["o"]["value"]))
+                entity_pairs.append(entity_pair)
 
-        if not results:
-            return
-        entity_pairs = []
-        for result in results["results"]["bindings"]:
-
-            entity_pair = [self._canonicalize(result["s"]),
-                                    self._canonicalize(result["o"])]
-            # logging.info("Yago::Adding %s-(%s) edge" % (relation, entity_pair))
-            entity_pairs.append(entity_pair)
-
-        logging.info("Yago::Number Entity Pair: %d" % len(entity_pairs))
+            logging.info("Yago::Number Entity Pair: %d" % len(entity_pairs))
         return entity_pairs
 
     def _query_labels(self, entity):
@@ -62,11 +63,12 @@ class YagoGraphBuilder(BaseGraphBuilder):
             WHERE {
                      <%s> rdfs:label ?o .
             }
-        """ % entity
+        """ % re.sub(r"[\"']", "\'", entity.replace("yago:", "http://yago-knowledge.org/resource/"))
 
         results = self._query_sparql(query)
-        for result in results["results"]["bindings"]:
-            np_values.append(result["o"]["value"])
+        if results:
+            for result in results["results"]["bindings"]:
+                np_values.append(result["o"]["value"])
 
         return np_values
 
@@ -93,7 +95,6 @@ if __name__ == "__main__":
                 args.sparql,
                 args.graph_file,
                 args.np_file)
-    import pdb;pdb.set_trace()
     logging.info("Yago::Adding Entity-Pair Relation Edge for Yago!")
     grapher.build_graph()
     logging.info("Yago::Exit!!")
