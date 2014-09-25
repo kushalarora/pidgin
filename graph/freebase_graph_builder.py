@@ -104,22 +104,23 @@ class FreebaseGraphBuilder(BaseGraphBuilder):
             entity_pair = (self._canonicalize(subject["value"]),
                             self._canonicalize(object["value"]))
             tup_arr.append(entity_pair)
+            logging.info("      Freebase::Adding %s-(%s) edge" % (relation_map['name'], entity_pair))
 
-        logging.info("      Freebase::Adding %s-(%s) edge" % (relation_map['name'], entity_pair))
         return tup_arr
 
 
     def _query_labels(self, entity):
         query = """
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX basekb: <http://rdf.basekb.com/ns/>
 
             SELECT ?o1
             WHERE {
-                     <%s> rdfs:label ?o1 .
+                     { <%s> rdfs:label ?o1 } UNION { <%s> basekb:type.object.name ?o1 } UNION {<%s> basekb:common.topic.alias ?o1 } .
                     FILTER (lang(?o1) = 'en')
 
             }
-        """ % entity.replace("basekb:", "http://rdf.basekb.com/ns/")
+        """ % ((entity.replace("basekb:", "http://rdf.basekb.com/ns/"), ) * 3)
 
         results = self._query_sparql(query)
 
@@ -131,6 +132,8 @@ class FreebaseGraphBuilder(BaseGraphBuilder):
         return np_values
 
     def preprocess_types(self, type):
+        if " "  in type:
+            return type
         return "basekb:%s" % ".".join(type[1:].split("/"))
 
 
@@ -186,7 +189,7 @@ class FreebaseGraphBuilder(BaseGraphBuilder):
             if filters[i + 1].find("NOTNULL") > -1:
                 q_arr[-1] = "FILTER EXISTS {%s %s %s}" % (f_p + str(i - 1), filters[i], f_p + str (i))
             else:
-                q_arr.append("FILTER (%s = %s)" % (s, filters[i + 1]))
+                q_arr.append("FILTER (%s = \"%s\")" % (s, filters[i + 1]))
         return (use_cvt, q_arr)
 
 

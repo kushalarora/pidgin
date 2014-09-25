@@ -1,3 +1,4 @@
+import logging
 class BaseGraphBuilder:
     KEY_VALUE_DELIMITER = "$$$"
     INTRA_VALUE_DELIMITER = "###"
@@ -28,24 +29,34 @@ class BaseGraphBuilder:
         return relation
 
     def build_graph(self):
-        label_set = set([])
+        label_map = {}
         for relation in open(self.relation_list):
             relation_file = open(self.entity_relation_filename, 'a+')
             relation = relation.strip()
             entity_pairs = self._query_entity_pair(relation)
             entity_pair_stringify = self.INTRA_VALUE_DELIMITER.join([self.INTRA_ENTITY_PAIR_DELIMITER.join(pair) for pair in entity_pairs])
-            relation_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([self._relation_name(relation), entity_pair_stringify]).encode('utf-8'))
+            relation_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([self._relation_name(relation), entity_pair_stringify, "1.0"]).encode('utf-8'))
 
             label_file = open(self.entity_label_filename, 'a+')
             for entity_pair in entity_pairs:
-                if entity_pair[0] not in label_set:
-                    label_entity1 = self._query_labels(entity_pair[0])
-                    label_set.add(entity_pair[0])
-                    label_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([entity_pair[0], self.INTRA_VALUE_DELIMITER.join(label_entity1)]).encode('utf-8'))
-                if entity_pair[1] not in label_set:
-                    label_entity2 = self._query_labels(entity_pair[1])
-                    label_set.add(entity_pair[1])
-                    label_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([entity_pair[1], self.INTRA_VALUE_DELIMITER.join(label_entity2)]).encode('utf-8'))
+                label_pairs = set([])
+                label_tuple = []
+                for entity in entity_pair:
+                    label = ""
+                    if entity not in label_map:
+                        try:
+                            label = self._query_labels(entity_pair[0])
+                        except:
+                            logging.info("label not found for entity:  %s" % label)
+                        label_map[entity] = label
+#                    label_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join([entity_pair[0], self.INTRA_VALUE_DELIMITER.join(label_entity1)]).encode('utf-8'))
+                for label1 in label_map[entity_pair[0]]:
+                    for label2 in label_map[entity_pair[1]]:
+                        label_pairs.add(self.INTRA_ENTITY_PAIR_DELIMITER.join([label1, label2]))
+
+                label_file.write("%s\n" % self.KEY_VALUE_DELIMITER.join(
+                    [self.INTRA_VALUE_DELIMITER.join(entity_pair), self.INTRA_VALUE_DELIMITER.join(label_pairs)]
+                ).encode('utf-8'))
             label_file.close()
             relation_file.close()
 

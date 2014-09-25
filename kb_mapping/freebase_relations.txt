@@ -1,9 +1,3 @@
-freebase:relation_1.tsv	/business/business_location/name	/business/business_location/parent_company
-freebase:relation_2.tsv	/business/acquisition/acquiring_company	/business/acquisition/company_acquired
-freebase:relation_3.tsv	/film/performance/actor	/film/performance/film
-freebase:relation_4.tsv	/film/film/name	/film/film/directed_by
-freebase:relation_5.tsv	/sports/pro_sports_played/athlete	/sports/pro_sports_played/sport
-freebase:relation_6.tsv	/architecture/structure/name	/architecture/structure/address:/location/mailing_address/id-/location/mailing_address/citytown
 freebase:relation_7.tsv	/organization/leadership/person	/organization/leadership/organization	/organization/leadership/person-/organization/leadership/role:Chief Executive Officer
 freebase:relation_8.tsv	/location/country/capital	/location/country/name
 freebase:relation_9.tsv	/location/location/name:/location/citytown/name	/location/location/containedby:/location/country/name
@@ -59,17 +53,17 @@ freebase:relation_58.tsv	/location/location/name	/location/location/containedby
 freebase:relation_59.tsv	/people/place_lived/person	/people/place_lived/location
 freebase:relation_60.tsv	/people/person/name	/people/person/place_of_birth
 freebase:relation_61.tsv	/people/person/name	/people/person/place_of_birth:/location/citytown/name
-freebase:relation_62.tsv	/people/person/parents	/people/person/name	
+freebase:relation_62.tsv	/people/person/parents	/people/person/name
 freebase:relation_63.tsv	/people/person/name	/people/person/children	/people/person/name-/people/person/gender:Female
 freebase:relation_64.tsv	/people/person/name	/people/person/children	/people/person/name-/people/person/gender:Male
-freebase:relation_65.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling	
-freebase:relation_66.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name	
-freebase:relation_67.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name	
-freebase:relation_68.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse	
-freebase:relation_69.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name	
-freebase:relation_70.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name	
+freebase:relation_65.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling
+freebase:relation_66.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name
+freebase:relation_67.tsv	/people/person/name	/people/person/sibling_s:/people/sibling_relationship/id-/people/sibling_relationship/sibling:/people/person/name
+freebase:relation_68.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse
+freebase:relation_69.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name
+freebase:relation_70.tsv	/people/person/name	/people/person/spouse_s:/people/marriage/id-/people/marriage/spouse:/people/person/name
 freebase:relation_71.tsv	/people/person/name	/people/person/education:/education/education/id-/education/education/institution
-freebase:relation_72.tsv	/government/politician/name	/government/politician/government_positions_held:/government/government_position_held/id-/government/government_position_held/office_position_or_title	
+freebase:relation_72.tsv	/government/politician/name	/government/politician/government_positions_held:/government/government_position_held/id-/government/government_position_held/office_position_or_title
 freebase:relation_73.tsv	/religion/place_of_worship/name	/religion/place_of_worship/religion
 freebase:relation_74.tsv	/internet/website_owner/name	/internet/website_owner/website_owned
 freebase:relation_75.tsv	/medicine/drug/name	/medicine/drug/name:/medicine/medical_treatment/name-/medicine/medical_treatment/used_to_treat
