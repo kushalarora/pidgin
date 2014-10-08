@@ -189,7 +189,7 @@ class FreebaseGraphBuilder(BaseGraphBuilder):
             if filters[i + 1].find("NOTNULL") > -1:
                 q_arr[-1] = "FILTER EXISTS {%s %s %s}" % (f_p + str(i - 1), filters[i], f_p + str (i))
             else:
-                q_arr.append("FILTER (%s = \"%s\")" % (s, filters[i + 1]))
+                q_arr.append("FILTER (%s = %s)" % (s, filters[i + 1]))
         return (use_cvt, q_arr)
 
 
